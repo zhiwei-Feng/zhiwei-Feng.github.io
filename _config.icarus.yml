@@ -4,7 +4,7 @@ version: 4.0.0
 variant: cyberpunk
 # Path or URL to the website's logo
 logo:
-    text: 'Barbatos'
+    text: '学无止境'
 # Page metadata configurations
 head:
     # URL or path to the website's icon
@@ -368,7 +368,7 @@ plugins:
     katex: false
     # Enable the MathJax math typesetting support
     # https://www.mathjax.org/
-    mathjax: false
+    mathjax: true
     # Enable the Outdated Browser plugin
     # http://outdatedbrowser.com/
     outdated_browser: false
