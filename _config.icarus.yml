@@ -159,7 +159,7 @@ search:
 #    shortname: ''
 comment:
      type: utterances
-     repo: zhiwei-Feng/mysite
+     repo: zhiwei-Feng/zhiwei-Feng.github.io
      issue_term: pathname
 
 # Donate plugin configurations
