@@ -241,6 +241,9 @@ widgets:
             Github:
                 icon: fab fa-github
                 url: 'https://github.com/zhiwei-Feng'
+            Email:
+                icon: fas fa-envelope
+                url: 'mailto:zhiwei.feng1995@gmail.com'
                   #Facebook:
                   #    icon: fab fa-facebook
                   #    url: 'https://facebook.com'
