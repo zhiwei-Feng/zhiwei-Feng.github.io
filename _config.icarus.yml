@@ -153,10 +153,15 @@ search:
     type: insight
 # Comment plugin configurations
 # https://ppoffice.github.io/hexo-theme-icarus/categories/Plugins/Comment/
+#comment:
+#    type: disqus
+#    # Disqus shortname
+#    shortname: ''
 comment:
-    type: disqus
-    # Disqus shortname
-    shortname: ''
+     type: utterances
+     repo: zhiwei-Feng/mysite
+     issue_term: pathname
+
 # Donate plugin configurations
 # https://ppoffice.github.io/hexo-theme-icarus/categories/Plugins/Donation/
 #donates:
@@ -271,7 +276,7 @@ widgets:
     # Categories widget configurations
     -
         # Where should the widget be placed, left sidebar or right sidebar
-        position: left
+        position: right
         type: categories
     # Recent posts widget configurations
     -
@@ -286,7 +291,7 @@ widgets:
     # Tags widget configurations
     -
         # Where should the widget be placed, left sidebar or right sidebar
-        position: left
+        position: right
         type: tags
     # Google FeedBurner email subscription widget configurations
     #-
