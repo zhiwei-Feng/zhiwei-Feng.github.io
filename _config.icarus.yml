@@ -129,7 +129,8 @@ article:
     highlight:
         # Code highlight themes
         # https://github.com/highlightjs/highlight.js/tree/master/src/styles
-        theme: atom-one-light
+        #theme: atom-one-light
+        theme: xt256
         # Show copy code button
         clipboard: true
         # Default folding status of the code blocks. Can be "", "folded", "unfolded"
@@ -161,6 +162,7 @@ comment:
      type: utterances
      repo: zhiwei-Feng/zhiwei-Feng.github.io
      issue_term: pathname
+     theme: 'github-dark-orange'
 
 # Donate plugin configurations
 # https://ppoffice.github.io/hexo-theme-icarus/categories/Plugins/Donation/
