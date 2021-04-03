@@ -8,3 +8,9 @@ widgets:
     -
         type: tags
         position: left
+    -
+        type: toc
+        position: right
+        index: true
+        collapsed: true
+        depth: 3
