@@ -249,9 +249,9 @@ widgets:
                   #Facebook:
                   #    icon: fab fa-facebook
                   #    url: 'https://facebook.com'
-                  #Twitter:
-                  #    icon: fab fa-twitter
-                  #    url: 'https://twitter.com'
+            Twitter:
+                icon: fab fa-twitter
+                url: 'https://twitter.com/fengzw5'
                   #Dribbble:
                   #    icon: fab fa-dribbble
                   #    url: 'https://dribbble.com'
