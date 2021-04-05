@@ -45,7 +45,6 @@ func findAveragesOfSubArraysBySlidingWindow(K int, arr []int) []float64 {
 	return results
 }
 ```
-time: O(n), extra space: O(1)
 
 ## 解法总结
 根据窗口大小是否固定，分为固定大小和可变大小
@@ -98,7 +97,8 @@ func solution(arr []int, k int) int {
     return maxSum
 }
 ```
-time: O(n), extra space: O(1)  
+
+> 相关练习: [[1]](https://leetcode-cn.com/problems/permutation-in-string/)[[2]](https://leetcode-cn.com/problems/find-all-anagrams-in-a-string/)[[3]](https://leetcode-cn.com/problems/substring-with-concatenation-of-all-words/)
 
 ### 可变大小
 这里通过[长度最小的子数组](https://leetcode-cn.com/problems/minimum-size-subarray-sum/)来说明
@@ -147,9 +147,132 @@ func minSubArrayLen(target int, nums []int) int {
     return minSize
 }
 ```
-time: O(n), extra space: O(1)  
 
-> 相关练习题: [[1]](https://leetcode-cn.com/problems/minimum-size-subarray-sum/)[[2]](https://leetcode-cn.com/problems/longest-substring-with-at-most-k-distinct-characters/)[[3]](https://leetcode-cn.com/problems/fruit-into-baskets/)[[4]](https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/)
+> 相关练习题: [[1]](https://leetcode-cn.com/problems/minimum-size-subarray-sum/)[[2]](https://leetcode-cn.com/problems/longest-substring-with-at-most-k-distinct-characters/)[[3]](https://leetcode-cn.com/problems/fruit-into-baskets/)[[4]](https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/)[[5]](https://leetcode-cn.com/problems/longest-repeating-character-replacement/)[[6]](https://leetcode-cn.com/problems/max-consecutive-ones-iii/)[[7]](https://leetcode-cn.com/problems/minimum-window-substring/)
+
+## 特殊例子
+### 最小覆盖子串
+原题见[leetcode](https://leetcode-cn.com/problems/minimum-window-substring/)
+
+```go
+func findSubstring(str, pattern string) string {
+    // 边界
+	if len(pattern)>len(str){
+		return ""
+	}
+	var (
+		windowStart = 0
+		matched     = 0
+		minLength   = len(str) + 1
+		subStrStart = 0
+		patternMap  = make(map[byte]int)
+	)
+	for i := 0; i < len(pattern); i++ {
+		patternMap[pattern[i]]++
+	}
+
+	for windowEnd := 0; windowEnd < len(str); windowEnd++ {
+		wright := str[windowEnd]
+		if _, ok := patternMap[wright]; ok {
+			patternMap[wright]--
+            // 关键点1, 不再是==0，而是>=0，因为包含所有的字符
+			if patternMap[wright] >= 0 {
+				matched++
+			}
+		}
+
+        // 如果当前window包含pattern所有的字符，则从左收缩窗口至不完全包含状态
+        // 注意这里等号右侧不是len(patternMap)，因为是要匹配所有字符
+		for matched == len(pattern) { 
+			if minLength > windowEnd-windowStart+1 {
+				minLength = windowEnd - windowStart + 1
+				subStrStart = windowStart
+			}
+
+			wleft := str[windowStart]
+			if _, ok := patternMap[wleft]; ok {
+                // 关键点2，只要有一个匹配的字符移除了窗口，则停止收缩
+				if patternMap[wleft] == 0 {
+					matched--
+				}
+				patternMap[wleft]++
+			}
+			windowStart++
+		}
+	}
+
+	if minLength > len(str) {
+		return ""
+	} else {
+		return str[subStrStart : subStrStart+minLength]
+	}
+}
+```
+__FAQ: 这里对上述代码做一定的解释，主要困惑点在于两个关键点__  
+Q: 为什么关键点1处是>=0？  
+A: 因为是要匹配所有的字符，因为每遇到一个需要匹配的字符，我们都需要对patternMap中对应值做减法并matched++, 直到我们匹配完了pattern所有该字符，此时对于多余该字符我们只需要更新patternMap，但是不必再更新matched。
+
+Q: 为什么关键点2处是==0？  
+A: 这里注意，如果窗口同一个字符没有冗余，那么移除了一个该字符则意味着匹配不完全，但是如果窗口内该字符有冗余，比如pattern是`aab`，而窗口内有3个`a`，此时`a`有冗余，如果收缩窗口只移出了一个`a`，那么此时窗口依然是满足匹配完全条件的，反映到代码上，收缩前`patternMap['a'] = -1` (在2的基础-3)，收缩后`patternMap['a']=0`，因此如果收缩掉下一个`a`，则需要matched--了。
+
+### 串联所有单词的子串
+原题见[leetcode](https://leetcode-cn.com/problems/substring-with-concatenation-of-all-words/)  
+这个题目主要要对题意理解清楚，首先目标子串需要满足几个条件：
+1. 长度等于单词列表中的每个单词长度*单词个数
+2. 子串不可以出现不在列表上的其他单词
+
+```go
+func findWordConcatenation(str string, words []string) []int {
+    if len(words)==0||len(str)==0{
+        return []int{}
+    }
+	var (
+		wordFreqMap = make(map[string]int)
+		wordsCount  = len(words)
+		wordLength  = len(words[0])
+        // 存储满足条件的index
+		startIndex  = make([]int, 0, 10) 
+	)
+
+	// 记录每个单词出现的频率
+	for _, v := range words {
+		wordFreqMap[v]++
+	}
+
+	// 注意这个不是常规的sliding window pattern
+    // i 表示的是一个子串的起始位置，从条件可知每个子串是固定长度的
+    // 所以i最大为len(str)-wordLength*wordsCount
+	for i := 0; i <= len(str)-wordLength*wordsCount; i++ {
+		wordsSeenMap := make(map[string]int) // key1: 保存看过的word的数量
+
+		// 对从当前index i开始的长度为wordLength*wordsCount的string进行判定
+		for j := 0; j < wordsCount; j++ {
+			nextWordIndex := i + j*wordLength // 当前word的开始index
+			word := str[nextWordIndex : nextWordIndex+wordLength]
+
+            // 如果出现不在words数组中的word，则直接跳出
+			if _, ok := wordFreqMap[word]; !ok {
+				break
+			}
+
+			wordsSeenMap[word]++
+            // 如果words数组中某个word数量出现次数过多意味着一定会有其他单词不在，则也直接跳出
+			if wordsSeenMap[word] > wordFreqMap[word] {
+				break
+			}
+
+			// 如果遍历到该string的最后一个字符都没跳出循环，意味该string是满足条件的
+			if j == wordsCount-1 {
+				startIndex = append(startIndex, i)
+			}
+		}
+		// ===end===
+	}
+
+	return startIndex
+}
+```
+
 
 ## REFERENCE
 [1] https://www.educative.io/courses/grokking-the-coding-interview  
