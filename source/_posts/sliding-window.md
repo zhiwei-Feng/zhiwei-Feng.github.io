@@ -154,9 +154,9 @@ func minSubArrayLen(target int, nums []int) int {
 ### 最小覆盖子串
 原题见[leetcode](https://leetcode-cn.com/problems/minimum-window-substring/)
 
-```go
+```golang
 func findSubstring(str, pattern string) string {
-    // 边界
+	// 边界 
 	if len(pattern)>len(str){
 		return ""
 	}
@@ -174,15 +174,14 @@ func findSubstring(str, pattern string) string {
 	for windowEnd := 0; windowEnd < len(str); windowEnd++ {
 		wright := str[windowEnd]
 		if _, ok := patternMap[wright]; ok {
-			patternMap[wright]--
-            // 关键点1, 不再是==0，而是>=0，因为包含所有的字符
+			patternMap[wright]-- 
+			// 关键点1, 不再是==0，而是>=0，因为包含所有的字符
 			if patternMap[wright] >= 0 {
 				matched++
 			}
 		}
-
-        // 如果当前window包含pattern所有的字符，则从左收缩窗口至不完全包含状态
-        // 注意这里等号右侧不是len(patternMap)，因为是要匹配所有字符
+		// 如果当前window包含pattern所有的字符，则从左收缩窗口至不完全包含状态 
+		// 注意这里等号右侧不是len(patternMap)，因为是要匹配所有字符
 		for matched == len(pattern) { 
 			if minLength > windowEnd-windowStart+1 {
 				minLength = windowEnd - windowStart + 1
@@ -191,7 +190,7 @@ func findSubstring(str, pattern string) string {
 
 			wleft := str[windowStart]
 			if _, ok := patternMap[wleft]; ok {
-                // 关键点2，只要有一个匹配的字符移除了窗口，则停止收缩
+				// 关键点2，只要有一个匹配的字符移除了窗口，则停止收缩
 				if patternMap[wleft] == 0 {
 					matched--
 				}
@@ -230,7 +229,7 @@ func findWordConcatenation(str string, words []string) []int {
 		wordFreqMap = make(map[string]int)
 		wordsCount  = len(words)
 		wordLength  = len(words[0])
-        // 存储满足条件的index
+		// 存储满足条件的index
 		startIndex  = make([]int, 0, 10) 
 	)
 
@@ -239,9 +238,9 @@ func findWordConcatenation(str string, words []string) []int {
 		wordFreqMap[v]++
 	}
 
-	// 注意这个不是常规的sliding window pattern
-    // i 表示的是一个子串的起始位置，从条件可知每个子串是固定长度的
-    // 所以i最大为len(str)-wordLength*wordsCount
+	// 注意这个不是常规的sliding window pattern 
+	// i表示的是一个子串的起始位置，从条件可知每个子串是固定长度的 
+	// 所以i最大为len(str)-wordLength*wordsCount
 	for i := 0; i <= len(str)-wordLength*wordsCount; i++ {
 		wordsSeenMap := make(map[string]int) // key1: 保存看过的word的数量
 
@@ -249,14 +248,13 @@ func findWordConcatenation(str string, words []string) []int {
 		for j := 0; j < wordsCount; j++ {
 			nextWordIndex := i + j*wordLength // 当前word的开始index
 			word := str[nextWordIndex : nextWordIndex+wordLength]
-
-            // 如果出现不在words数组中的word，则直接跳出
+			// 如果出现不在words数组中的word，则直接跳出
 			if _, ok := wordFreqMap[word]; !ok {
 				break
 			}
 
-			wordsSeenMap[word]++
-            // 如果words数组中某个word数量出现次数过多意味着一定会有其他单词不在，则也直接跳出
+			wordsSeenMap[word]++ 
+			// 如果words数组中某个word数量出现次数过多意味着一定会有其他单词不在，则也直接跳出
 			if wordsSeenMap[word] > wordFreqMap[word] {
 				break
 			}
