@@ -27,22 +27,22 @@ Output: [2.2, 2.8, 2.4, 3.6, 2.8]
 滑动窗口的解决方案如下:
 ```go
 func findAveragesOfSubArraysBySlidingWindow(K int, arr []int) []float64 {
-	results := make([]float64, len(arr)-K+1)
-	windowSum := 0
-	windowStart := 0
-	for windowEnd := 0; windowEnd < len(arr); windowEnd++ {
-		// 把下个元素加上
-		windowSum += arr[windowEnd]
-		// 滑动窗口，特别地，如果没有达到K个则不滑动
-		if windowEnd >= K-1 {
-			// 当前windowSum计算了整个窗口的和
-			results[windowStart] = float64(windowSum) / float64(K)
-			// 当前窗口计算完后，移动窗口需要先减去原来窗口头部的元素
-			windowSum -= arr[windowStart]
-			windowStart++
-		}
-	}
-	return results
+    results := make([]float64, len(arr)-K+1)
+    windowSum := 0
+    windowStart := 0
+    for windowEnd := 0; windowEnd < len(arr); windowEnd++ {
+        // 把下个元素加上
+        windowSum += arr[windowEnd]
+        // 滑动窗口，特别地，如果没有达到K个则不滑动
+        if windowEnd >= K-1 {
+            // 当前windowSum计算了整个窗口的和
+            results[windowStart] = float64(windowSum) / float64(K)
+            // 当前窗口计算完后，移动窗口需要先减去原来窗口头部的元素
+            windowSum -= arr[windowStart]
+            windowStart++
+        }
+    }
+    return results
 }
 ```
 
@@ -67,11 +67,11 @@ Explanation: Subarray with maximum sum is [3, 4].
 解决方案
 ```go
 func max(x, y int) int {
-	if x > y {
-		return x
-	} else {
-		return y
-	}
+    if x > y {
+        return x
+    } else {
+        return y
+    }
 }
 
 func solution(arr []int, k int) int {
@@ -140,7 +140,7 @@ func minSubArrayLen(target int, nums []int) int {
         // 对于一些情况条件需要进行后处理，比如当收缩窗口直到窗口内单一字符数量<k
         // 然后再比较当前窗口的大小
     }
-    
+
     if minSize==-1{
         return 0
     }
@@ -156,55 +156,55 @@ func minSubArrayLen(target int, nums []int) int {
 
 ```golang
 func findSubstring(str, pattern string) string {
-	// 边界 
-	if len(pattern)>len(str){
-		return ""
-	}
-	var (
-		windowStart = 0
-		matched     = 0
-		minLength   = len(str) + 1
-		subStrStart = 0
-		patternMap  = make(map[byte]int)
-	)
-	for i := 0; i < len(pattern); i++ {
-		patternMap[pattern[i]]++
-	}
+    // 边界 
+    if len(pattern)>len(str){
+        return ""
+    }
+    var (
+        windowStart = 0
+        matched     = 0
+        minLength   = len(str) + 1
+        subStrStart = 0
+        patternMap  = make(map[byte]int)
+    )
+    for i := 0; i < len(pattern); i++ {
+        patternMap[pattern[i]]++
+    }
 
-	for windowEnd := 0; windowEnd < len(str); windowEnd++ {
-		wright := str[windowEnd]
-		if _, ok := patternMap[wright]; ok {
-			patternMap[wright]-- 
-			// 关键点1, 不再是==0，而是>=0，因为包含所有的字符
-			if patternMap[wright] >= 0 {
-				matched++
-			}
-		}
-		// 如果当前window包含pattern所有的字符，则从左收缩窗口至不完全包含状态 
-		// 注意这里等号右侧不是len(patternMap)，因为是要匹配所有字符
-		for matched == len(pattern) { 
-			if minLength > windowEnd-windowStart+1 {
-				minLength = windowEnd - windowStart + 1
-				subStrStart = windowStart
-			}
+    for windowEnd := 0; windowEnd < len(str); windowEnd++ {
+        wright := str[windowEnd]
+        if _, ok := patternMap[wright]; ok {
+            patternMap[wright]-- 
+            // 关键点1, 不再是==0，而是>=0，因为包含所有的字符
+            if patternMap[wright] >= 0 {
+                matched++
+            }
+        }
+        // 如果当前window包含pattern所有的字符，则从左收缩窗口至不完全包含状态 
+        // 注意这里等号右侧不是len(patternMap)，因为是要匹配所有字符
+        for matched == len(pattern) { 
+            if minLength > windowEnd-windowStart+1 {
+                minLength = windowEnd - windowStart + 1
+                subStrStart = windowStart
+            }
 
-			wleft := str[windowStart]
-			if _, ok := patternMap[wleft]; ok {
-				// 关键点2，只要有一个匹配的字符移除了窗口，则停止收缩
-				if patternMap[wleft] == 0 {
-					matched--
-				}
-				patternMap[wleft]++
-			}
-			windowStart++
-		}
-	}
+            wleft := str[windowStart]
+            if _, ok := patternMap[wleft]; ok {
+                // 关键点2，只要有一个匹配的字符移除了窗口，则停止收缩
+                if patternMap[wleft] == 0 {
+                    matched--
+                }
+                patternMap[wleft]++
+            }
+            windowStart++
+        }
+    }
 
-	if minLength > len(str) {
-		return ""
-	} else {
-		return str[subStrStart : subStrStart+minLength]
-	}
+    if minLength > len(str) {
+        return ""
+    } else {
+        return str[subStrStart : subStrStart+minLength]
+    }
 }
 ```
 __FAQ: 这里对上述代码做一定的解释，主要困惑点在于两个关键点__  
@@ -225,49 +225,49 @@ func findWordConcatenation(str string, words []string) []int {
     if len(words)==0||len(str)==0{
         return []int{}
     }
-	var (
-		wordFreqMap = make(map[string]int)
-		wordsCount  = len(words)
-		wordLength  = len(words[0])
-		// 存储满足条件的index
-		startIndex  = make([]int, 0, 10) 
-	)
+    var (
+        wordFreqMap = make(map[string]int)
+        wordsCount  = len(words)
+        wordLength  = len(words[0])
+        // 存储满足条件的index
+        startIndex  = make([]int, 0, 10) 
+    )
 
-	// 记录每个单词出现的频率
-	for _, v := range words {
-		wordFreqMap[v]++
-	}
+    // 记录每个单词出现的频率
+    for _, v := range words {
+        wordFreqMap[v]++
+    }
 
-	// 注意这个不是常规的sliding window pattern 
-	// i表示的是一个子串的起始位置，从条件可知每个子串是固定长度的 
-	// 所以i最大为len(str)-wordLength*wordsCount
-	for i := 0; i <= len(str)-wordLength*wordsCount; i++ {
-		wordsSeenMap := make(map[string]int) // key1: 保存看过的word的数量
+    // 注意这个不是常规的sliding window pattern 
+    // i表示的是一个子串的起始位置，从条件可知每个子串是固定长度的 
+    // 所以i最大为len(str)-wordLength*wordsCount
+    for i := 0; i <= len(str)-wordLength*wordsCount; i++ {
+        wordsSeenMap := make(map[string]int) // key1: 保存看过的word的数量
 
-		// 对从当前index i开始的长度为wordLength*wordsCount的string进行判定
-		for j := 0; j < wordsCount; j++ {
-			nextWordIndex := i + j*wordLength // 当前word的开始index
-			word := str[nextWordIndex : nextWordIndex+wordLength]
-			// 如果出现不在words数组中的word，则直接跳出
-			if _, ok := wordFreqMap[word]; !ok {
-				break
-			}
+        // 对从当前index i开始的长度为wordLength*wordsCount的string进行判定
+        for j := 0; j < wordsCount; j++ {
+            nextWordIndex := i + j*wordLength // 当前word的开始index
+            word := str[nextWordIndex : nextWordIndex+wordLength]
+            // 如果出现不在words数组中的word，则直接跳出
+            if _, ok := wordFreqMap[word]; !ok {
+                break
+            }
 
-			wordsSeenMap[word]++ 
-			// 如果words数组中某个word数量出现次数过多意味着一定会有其他单词不在，则也直接跳出
-			if wordsSeenMap[word] > wordFreqMap[word] {
-				break
-			}
+            wordsSeenMap[word]++ 
+            // 如果words数组中某个word数量出现次数过多意味着一定会有其他单词不在，则也直接跳出
+            if wordsSeenMap[word] > wordFreqMap[word] {
+                break
+            }
 
-			// 如果遍历到该string的最后一个字符都没跳出循环，意味该string是满足条件的
-			if j == wordsCount-1 {
-				startIndex = append(startIndex, i)
-			}
-		}
-		// ===end===
-	}
+            // 如果遍历到该string的最后一个字符都没跳出循环，意味该string是满足条件的
+            if j == wordsCount-1 {
+                startIndex = append(startIndex, i)
+            }
+        }
+        // ===end===
+    }
 
-	return startIndex
+    return startIndex
 }
 ```
 
