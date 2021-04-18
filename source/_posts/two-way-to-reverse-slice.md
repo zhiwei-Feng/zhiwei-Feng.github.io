@@ -11,7 +11,7 @@ toc: true
 刷题时，遇到一个需求如下：对一个slice进行翻转。  
 在实现的过程使用了两种方式：
 - 每次插入新元素时，使用append左插入的方式
-- 先正常append右插入，最后再对这个slice反向遍历插入到新的slice中
+- 先正常append右插入，最后再对这个slice进行翻转
 
 <!-- more -->
 
@@ -80,6 +80,47 @@ BenchmarkMethod2-4         43002             27851 ns/op
 
 从上图我们发现，`result = append(join, result...)`语句的内存消耗非常严重，
 同时这种方法进行append，会使得地址重新分配（因为首地址改变了）致使多余内存和时间的消耗。
+
+#### 补充
+方法2的翻转可以有两种方法实现
+- 如上面所示，通过slice反向遍历插入完成翻转
+- 还可以通过双指针法来翻转
+
+这里通过一个简单例子比较下双方的性能
+```golang
+func method1() {
+    var input = make([]int, 0, 100)
+    for i := 0; i < len(input); i++ {
+        input = append(input, i)
+    }
+    // method1
+    for i := 0; i < len(input); i++ {
+        j := len(input) - 1 - i
+        input[i], input[j] = input[j], input[j]
+    }
+}
+
+func method2() {
+    var input = make([]int, 0, 100)
+    for i := 0; i < len(input); i++ {
+        input = append(input, i)
+    }
+    // method2
+    tmp := input
+    input = make([]int, 0, 100)
+    for i := len(tmp) - 1; i >= 0; i-- {
+        input = append(input, tmp[i])
+    }
+}
+```
+结果表示，双指针法会更好一些，理由很简单，因为双指针是O(N/2)的
+```text
+goos: darwin
+goarch: amd64
+BenchmarkMethod1-4      64120593                17.6 ns/op 
+BenchmarkMethod2-4      29222400                40.8 ns/op 
+```
+
 
 ## 结论
 这种情况下推荐使用方法2，同时对于方法1(左插入)的使用要格外谨慎，不当的使用会使得程序的时/空间消耗加剧。
