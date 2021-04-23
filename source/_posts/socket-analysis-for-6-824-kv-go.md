@@ -114,7 +114,10 @@ $
 
 等待2MSL后，客户端Close。
 
-> 如果希望对TIME_WAIT的设计想要更深入了解，可以参考[为什么 TCP 协议有 TIME_WAIT 状态](https://draveness.me/whys-the-design-tcp-time-wait/)
+> 如果希望对TCP的设计想要更深入了解，可以参考  
+> - [为什么 TCP 协议有 TIME_WAIT 状态](https://draveness.me/whys-the-design-tcp-time-wait/)  
+> - [为什么 TCP 建立连接需要三次握手](https://draveness.me/whys-the-design-tcp-three-way-handshake/)  
+> - [Why is the TCP connection terminated in a 4-way handshake?](https://www.quora.com/Why-is-the-TCP-connection-terminated-in-a-4-way-handshake)
 
 ## REFERENCE
 [1] [6.824 kv.go](http://nil.csail.mit.edu/6.824/2020/notes/kv.go)  
