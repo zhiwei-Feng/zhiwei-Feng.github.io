@@ -279,6 +279,7 @@ widgets:
             Hexo: 'https://hexo.io'
             Bulma: 'https://bulma.io'
             Hjh: 'https://jiahaohong1997.github.io/'
+            draveness: 'https://draveness.me/'
     # Categories widget configurations
     -
         # Where should the widget be placed, left sidebar or right sidebar
