@@ -94,9 +94,9 @@ func method1() {
         input = append(input, i)
     }
     // method1
-    for i := 0; i < len(input); i++ {
+    for i := 0; i < len(input)/2; i++ {
         j := len(input) - 1 - i
-        input[i], input[j] = input[j], input[j]
+        input[i], input[j] = input[j], input[i]
     }
 }
 
@@ -115,10 +115,12 @@ func method2() {
 ```
 结果表示，双指针法会更好一些，理由很简单，因为双指针是O(N/2)的
 ```text
+$ go test -run=. -bench=. -benchmem
 goos: darwin
 goarch: amd64
-BenchmarkMethod1-4      64120593                17.6 ns/op 
-BenchmarkMethod2-4      29222400                40.8 ns/op 
+BenchmarkMethod1-4      71840024                16.9 ns/op             0 B/op          0 allocs/op
+BenchmarkMethod2-4      26362216                39.7 ns/op             0 B/op          0 allocs/op
+PASS
 ```
 
 
