@@ -4,7 +4,7 @@ version: 4.0.0
 variant: default
 # Path or URL to the website's logo
 logo:
-    text: '学无止境'
+    text: '!End'
 # Page metadata configurations
 head:
     # URL or path to the website's icon
@@ -225,9 +225,9 @@ widgets:
         position: left
         type: profile
         # Author name
-        author: Barbatos
+        author: fengzw
         # Author title
-        author_title: Gopher
+        author_title: Gopher/Newbie Rustacean
         # Author's current location
         location: Shanghai
         # URL or path to the avatar image
