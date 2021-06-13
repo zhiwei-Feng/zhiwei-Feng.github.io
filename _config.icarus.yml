@@ -231,7 +231,7 @@ widgets:
         # Author's current location
         location: Shanghai
         # URL or path to the avatar image
-        avatar: 'https://i.loli.net/2021/04/03/ysIE5SBvlKLVbtp.png'
+        avatar: 'https://i.loli.net/2021/06/13/rvql29wD8s7aVuY.jpg'
         # Whether show the rounded avatar image
         avatar_rounded: false
         # Email address for the Gravatar
