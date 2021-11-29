@@ -2,6 +2,10 @@
 title: Gorm加悲观锁的最新用法
 date: 2021-11-30 00:06:39
 tags:
+- gorm
+- go
+categories:
+- Golang
 ---
 
 因为google了“gorm for update”或者是“gorm 开启排他锁”出来的文章清一色的使用着如下用法来开启表的行/表锁  
