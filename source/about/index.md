@@ -1,7 +1,6 @@
 ---
 title: about
 date: 2021-04-03 17:57:56
-comment: true
 ---
 
 ### About Me
