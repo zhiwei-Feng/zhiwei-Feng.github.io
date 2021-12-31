@@ -165,7 +165,7 @@ local_search:
 # Comment plugin
 # ---------------------------------------------------------------------------------------
 comment:
-  enable: true
+  enable: false
   use: gitalk # values: valine | gitalk | twikoo
 
   # Valine
@@ -180,8 +180,8 @@ comment:
   gitalk:
     github_id: zhiwei-Feng
     repository: personal-site-comments
-    client_id: 1cd3c5137f72384f5b73
-    client_secret: 446d6ceab10d6fd86190236f3d154ba45ee4cd44
+    client_id: 
+    client_secret: 
 
   # Twikoo
   # See: https://github.com/imaegoo/twikoo
