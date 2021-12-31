@@ -21,10 +21,10 @@ style:
   primary_color: "#0066CC"
 
   # Avatar (You can use local image or image external link)
-  avatar: https://s2.loli.net/2021/12/31/1jki4DxdZhplV5u.jpg
+  avatar: https://cdn.jsdelivr.net/gh/zhiwei-Feng/site-images@master/20211231/IMG_0529.6a0hnx6sa4s0.webp
 
   # Favicon (You can use local image or image external link)
-  favicon: https://s2.loli.net/2021/12/31/1jki4DxdZhplV5u.jpg
+  favicon: https://cdn.jsdelivr.net/gh/zhiwei-Feng/site-images@master/20211231/IMG_0529.6a0hnx6sa4s0.webp
 
   # Article image align position, value: left | center
   article_img_align: left
