@@ -10,3 +10,4 @@ Hello! 很高兴遇见你☀️
 
 最后有关文章的任何问题请前往[站点源码库的discussion](https://github.com/zhiwei-Feng/zhiwei-Feng.github.io/discussions)提出哦~
 
+我的[人格类型](https://www.16personalities.com/profiles/28353e84617f3)
