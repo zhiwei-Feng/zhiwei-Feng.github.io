@@ -2,7 +2,7 @@
 #  Your basic info
 # ---------------------------------------------------------------------------------------
 base_info:
-  title: 今天我成长了吗
+  title: LEARN and LIVE
   author: Emet
   url: http://zhiwei-Feng.github.io
   logo_img: 
@@ -44,7 +44,7 @@ style:
   first_screen:
     enable: true
     background_img: /images/bg.svg # You can use local image or image external link
-    description: 学无止境 【保持谦逊、新鲜感、学徒心】
+    description: 谦逊、新鲜感、学徒心
 
   # Scroll style settings
   scroll:
@@ -165,15 +165,15 @@ local_search:
 # Comment plugin
 # ---------------------------------------------------------------------------------------
 comment:
-  enable: false
-  use: gitalk # values: valine | gitalk | twikoo
+  enable: true
+  use: valine # values: valine | gitalk | twikoo
 
   # Valine
   # See: https://github.com/xCss/Valine
   valine:
-    appid: # your leancloud application appid
-    appkey: # your leancloud application appkey
-    placeholder: # your placeholder
+    appid: s7dhFd9p5mnhcxDBzUokaTxk-gzGzoHsz
+    appkey: br7KmBF7zC3uKwtPN4WhHaEv
+    placeholder: 尽情吐槽吧！
 
   # Gitalk
   # See: https://github.com/gitalk/gitalk
