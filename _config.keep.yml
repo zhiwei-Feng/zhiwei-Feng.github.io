@@ -165,7 +165,7 @@ local_search:
 # Comment plugin
 # ---------------------------------------------------------------------------------------
 comment:
-  enable: true
+  enable: false
   use: valine # values: valine | gitalk | twikoo
 
   # Valine
