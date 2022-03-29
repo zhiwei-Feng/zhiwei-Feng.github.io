@@ -266,8 +266,8 @@ comments:
 # disqus
 # https://disqus.com/
 disqus:
-  shortname: adrian_feng
-  apikey: 8bxlqISa9l1yuPcZvP0ea6TiTra1YKzsM2qRXluZqhQQKQ5M9BPegw1s2zVwTU8z # For newest comments widget
+  shortname: 
+  apikey:  # For newest comments widget
 
 # Alternative Disqus - Render comments with Disqus API
 # DisqusJS 評論系統，可以實現在網路審查地區載入 Disqus 評論列表，兼容原版
