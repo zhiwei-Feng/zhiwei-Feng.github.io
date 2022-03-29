@@ -3,13 +3,14 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: '!End'
-subtitle: Keep coding, keep improving
-description: 'fengzw的博客'
+title: '纯粹'
+# subtitle: Protect Your Dreams
+description: 'Protect Your Dreams'
 keywords: Go,Rust,分布式,微服务,云原生,中间件
-author: fengzw
+author: Fengzw
 language: zh-CN
 timezone: 'Asia/Shanghai'
+email: zhiwei.feng1995@gmail.com
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
@@ -46,7 +47,7 @@ future: true
 highlight:
   enable: true
   line_number: true
-  auto_detect: false
+  auto_detect: true
   tab_replace: ''
   wrap: true
   hljs: false
@@ -98,7 +99,7 @@ ignore:
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
 # theme: icarus
-theme: keep
+theme: butterfly
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
