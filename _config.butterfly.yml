@@ -12,6 +12,7 @@ menu:
   #   Movie: /movies/ || fas fa-video
   Link: /link/ || fas fa-link
   About: /about/ || fas fa-heart
+  Interview: /interview/ || fas fa-code
 
 # Code Blocks (代碼相關)
 # --------------------------------------
