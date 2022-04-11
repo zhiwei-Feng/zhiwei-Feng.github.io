@@ -88,7 +88,7 @@ disable_top_img: false
 index_img:
 
 # If the banner of page not setting, it will show the top_img
-default_top_img:
+default_top_img: https://s2.loli.net/2022/04/11/oqM3Sgiv2sUdlRC.png
 
 # The banner image of archive page
 archive_img:
@@ -588,7 +588,7 @@ hr_icon:
 
 # the subtitle on homepage (主頁subtitle)
 subtitle:
-  enable: true
+  enable: false
   # Typewriter Effect (打字效果)
   effect: true
   # loop (循環打字)
