@@ -1,5 +1,5 @@
 ---
-title: "总结: 旋转排序数组搜索"
+title: Leetcode 旋转排序数组搜索问题总结
 date: 2022-04-14 19:07:58
 categories:
 - 算法
