@@ -7,6 +7,7 @@ tags:
 - leetcode
 - algorithm
 - binary search
+cover: https://s2.loli.net/2022/04/19/CgdTPa8ncFltV53.png
 ---
 
 本篇文章主要对leetcode上关于旋转排序数组搜索问题的二分解法一个总结, 具体题目集有以下几个题目
