@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="本文主要总结了如何实现6.824 lab1的大纲, 方便自己和读者能够迅速理解MapReduce具体要实现些什么.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[6.824系列] Outline of lab1 solution">
+<meta property="og:url" content="http://zhiwei-feng.github.io/2022/04/10/outline-of-6-824-lab1-solution/index.html">
+<meta property="og:site_name" content="Find your passion and work on it">
+<meta property="og:description" content="本文主要总结了如何实现6.824 lab1的大纲, 方便自己和读者能够迅速理解MapReduce具体要实现些什么.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.loli.net/2022/04/11/cMWPq7SkInDEVr4.png">
+<meta property="article:published_time" content="2022-04-10T15:34:10.000Z">
+<meta property="article:modified_time" content="2022-04-24T18:31:21.737Z">
+<meta property="article:author" content="Fengzw">
+<meta property="article:tag" content="go">
+<meta property="article:tag" content="分布式">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2022/04/11/cMWPq7SkInDEVr4.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>[6.824系列] Outline of lab1 solution</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/tags/">Tags</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2022/04/14/summary-of-search-in-rotated-sorted-array/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2022/01/01/2021summary/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://zhiwei-feng.github.io/2022/04/10/outline-of-6-824-lab1-solution/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://zhiwei-feng.github.io/2022/04/10/outline-of-6-824-lab1-solution/&text=[6.824系列] Outline of lab1 solution"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://zhiwei-feng.github.io/2022/04/10/outline-of-6-824-lab1-solution/&title=[6.824系列] Outline of lab1 solution"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://zhiwei-feng.github.io/2022/04/10/outline-of-6-824-lab1-solution/&is_video=false&description=[6.824系列] Outline of lab1 solution"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=[6.824系列] Outline of lab1 solution&body=Check out this article: http://zhiwei-feng.github.io/2022/04/10/outline-of-6-824-lab1-solution/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://zhiwei-feng.github.io/2022/04/10/outline-of-6-824-lab1-solution/&title=[6.824系列] Outline of lab1 solution"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://zhiwei-feng.github.io/2022/04/10/outline-of-6-824-lab1-solution/&title=[6.824系列] Outline of lab1 solution"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://zhiwei-feng.github.io/2022/04/10/outline-of-6-824-lab1-solution/&title=[6.824系列] Outline of lab1 solution"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://zhiwei-feng.github.io/2022/04/10/outline-of-6-824-lab1-solution/&title=[6.824系列] Outline of lab1 solution"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://zhiwei-feng.github.io/2022/04/10/outline-of-6-824-lab1-solution/&name=[6.824系列] Outline of lab1 solution&description=&lt;p&gt;本文主要总结了如何实现&lt;a href=&#34;http://nil.csail.mit.edu/6.824/2020/labs/lab-mr.html&#34;&gt;6.824 lab1&lt;/a&gt;的大纲, 方便自己和读者能够迅速理解MapReduce具体要实现些什么.&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://zhiwei-feng.github.io/2022/04/10/outline-of-6-824-lab1-solution/&t=[6.824系列] Outline of lab1 solution"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A6%82%E8%A7%88"><span class="toc-number">1.</span> <span class="toc-text">概览</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">2.</span> <span class="toc-text">问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Q1-%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E7%94%B1%E8%B0%81%E6%9D%A5%E5%AF%B9%E4%BB%BB%E5%8A%A1%E8%BE%93%E5%85%A5%E6%96%87%E4%BB%B6%E8%BF%9B%E8%A1%8Csplit-%E5%A6%82%E4%BD%95split"><span class="toc-number">2.1.</span> <span class="toc-text">Q1: 什么时候由谁来对任务输入文件进行split? 如何split?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Q2-Map%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">2.2.</span> <span class="toc-text">Q2: Map是什么?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Q3-Reduce%E6%80%8E%E4%B9%88%E7%9F%A5%E9%81%93%E8%87%AA%E5%B7%B1%E5%AF%B9%E5%BA%94%E7%9A%84%E6%98%AF%E5%93%AA%E4%BA%9BIntermediate-files"><span class="toc-number">2.3.</span> <span class="toc-text">Q3: Reduce怎么知道自己对应的是哪些Intermediate files?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Q4-%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86Map%E4%BB%BB%E5%8A%A1%E6%88%96%E8%80%85Reduce%E4%BB%BB%E5%8A%A1%E6%89%A7%E8%A1%8C%E8%B6%85%E6%97%B6%E6%88%96%E5%A4%B1%E8%B4%A5%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">2.4.</span> <span class="toc-text">Q4: 如何处理Map任务或者Reduce任务执行超时或失败的问题</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E5%A4%A7%E7%BA%B2"><span class="toc-number">3.</span> <span class="toc-text">实现大纲</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Worker"><span class="toc-number">3.1.</span> <span class="toc-text">Worker</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Map%E5%A4%84%E7%90%86"><span class="toc-number">3.1.1.</span> <span class="toc-text">Map处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Reduce%E5%A4%84%E7%90%86"><span class="toc-number">3.1.2.</span> <span class="toc-text">Reduce处理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Master"><span class="toc-number">3.2.</span> <span class="toc-text">Master</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%BB%E5%8A%A1%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">3.2.1.</span> <span class="toc-text">任务初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%BB%E5%8A%A1%E5%88%86%E9%85%8D"><span class="toc-number">3.2.2.</span> <span class="toc-text">任务分配</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%BB%E5%8A%A1%E5%AE%8C%E6%88%90%E5%A4%84%E7%90%86"><span class="toc-number">3.2.3.</span> <span class="toc-text">任务完成处理</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        [6.824系列] Outline of lab1 solution
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Fengzw</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-04-10T15:34:10.000Z" itemprop="datePublished">2022-04-10</time>
+        
+        (Updated: <time datetime="2022-04-24T18:31:21.737Z" itemprop="dateModified">2022-04-25</time>)
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/6-824/">6.824</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/go/" rel="tag">go</a>, <a class="tag-link-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag">分布式</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>本文主要总结了如何实现<a target="_blank" rel="noopener" href="http://nil.csail.mit.edu/6.824/2020/labs/lab-mr.html">6.824 lab1</a>的大纲, 方便自己和读者能够迅速理解MapReduce具体要实现些什么.</p>
+<span id="more"></span>
+<h1 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h1><p>首先整个MapReduce的过程可以参考下图, 分为两个阶段: Map和Reduce阶段.<br><img src="https://s2.loli.net/2022/04/11/cMWPq7SkInDEVr4.png" alt="image.png"><br>从这个图中我们可以总结出MapReduce整体的工作流程如下</p>
+<ol>
+<li>将任务的输入文件拆分多个split文件</li>
+<li>创建多个Map任务, 每个任务对应输入若干个split</li>
+<li>在多个worker服务器上执行Map任务, 并将输出写入到Intermediate files中</li>
+<li>当所有Map完成后, MapReduce进入Reduce阶段, 为多个worker服务器分配Reduce任务</li>
+<li>每个Reduce任务读取对应的Intermediate files完成Reduce任务, 并将输出写入对应的output files</li>
+</ol>
+<h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><h2 id="Q1-什么时候由谁来对任务输入文件进行split-如何split"><a href="#Q1-什么时候由谁来对任务输入文件进行split-如何split" class="headerlink" title="Q1: 什么时候由谁来对任务输入文件进行split? 如何split?"></a>Q1: 什么时候由谁来对任务输入文件进行split? 如何split?</h2><blockquote>
+<p>A: 由Master在MapReduce任务初始化的过程完成, split的目的是为了将一个任务拆分成多个子任务给到多个worker机器运行, 实现并发加速, 因此split文件的数量应该等同于worker机器数量来设置. 同时split应该按照预设好的文件的大小来进行划分(比如一个split文件为1KB大小). </p>
+</blockquote>
+<h2 id="Q2-Map是什么"><a href="#Q2-Map是什么" class="headerlink" title="Q2: Map是什么?"></a>Q2: Map是什么?</h2><blockquote>
+<p>A: 接收一个key/value的pair, 产生一系列的key/value中间结果的过程就是Map, 比如说下面是一个wordcount的map例&gt; 子</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">map</span>(<span class="keyword">String</span> key, <span class="keyword">String</span> value):</span><br><span class="line">    <span class="comment">// key: document name</span></span><br><span class="line">    <span class="comment">// value: document contents</span></span><br><span class="line">    <span class="keyword">for</span> each <span class="keyword">word</span> w in value:</span><br><span class="line">        <span class="built_in">EmitIntermediate</span>(w, <span class="string">&quot;1&quot;</span>);</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h2 id="Q3-Reduce怎么知道自己对应的是哪些Intermediate-files"><a href="#Q3-Reduce怎么知道自己对应的是哪些Intermediate-files" class="headerlink" title="Q3: Reduce怎么知道自己对应的是哪些Intermediate files?"></a>Q3: Reduce怎么知道自己对应的是哪些Intermediate files?</h2><blockquote>
+<p>A: 我们把对Map产生的每一个key/value, 对key进行hash后分配到一个Reduce任务, 具体来说:</p>
+<ol>
+<li>给定一个Map任务X以及产生的key/value pair</li>
+<li>Reduce Y = hash(key) % nReduce</li>
+<li>write to “mr-X-Y” file<br>因此, 对于给定的Reduce任务Y, 它去读取所有的<code>mr-?-Y</code>文件作为输入.</li>
+</ol>
+</blockquote>
+<h2 id="Q4-如何处理Map任务或者Reduce任务执行超时或失败的问题"><a href="#Q4-如何处理Map任务或者Reduce任务执行超时或失败的问题" class="headerlink" title="Q4: 如何处理Map任务或者Reduce任务执行超时或失败的问题"></a>Q4: 如何处理Map任务或者Reduce任务执行超时或失败的问题</h2><blockquote>
+<p>A: 利用超时机制和Master被动分配任务来实现超时重试, 对每一个任务都记录其开始的时间, 当worker请求分配任务的时候, 遍历所有的任务判断是否超时, 如果超时则是一个可以被分配的任务.</p>
+</blockquote>
+<h1 id="实现大纲"><a href="#实现大纲" class="headerlink" title="实现大纲"></a>实现大纲</h1><p>大纲可以分为两个部分: Master和Worker</p>
+<h2 id="Worker"><a href="#Worker" class="headerlink" title="Worker"></a>Worker</h2><p>对于每一个Worker, 它的执行过程都可以概括为:无限循环请求任务分配并执行直至MapReduce全部任务完成. 过程如下:</p>
+<ol>
+<li>向Master申请分配任务(由Master决定分配Map还是Reduce任务)</li>
+<li>如果Master返回MapReduce已经全部完成则退出循环</li>
+<li>根据返回的任务类型(Map or Reduce)执行对应的处理过程</li>
+<li>重复上述</li>
+</ol>
+<h3 id="Map处理"><a href="#Map处理" class="headerlink" title="Map处理"></a>Map处理</h3><p><strong>Map的输入</strong>: taskId(任务ID), nReduce(预设的Reduce个数), fileName(输入文件的访问路径)</p>
+<blockquote>
+<p>这里需要注意fileName的定义, 在这个作业当中, 我们可以直接使用文件名作为fileName, 这是因为程序跑在单机环境下, 通过多个进程的形式模拟分布式环境, 因此默认情况下相关文件都存放在主程序的当前目录下, 因此可以通过文件名即可以访问到, 但是在生产环境, 我们往往会依托一个分布式文件系统来存放这些文件(比如GFS), 因此此时fileName应该是一个文件访问URL, 可以通过URL去分布式文件系统读取到对应文件. </p>
+</blockquote>
+<p><strong>Map的过程</strong></p>
+<ol>
+<li>读取文件内容并经map函数处理得到对应kv对集合<code>kva</code></li>
+<li>创建nReduce个临时文件</li>
+<li>将<code>kva</code>按照key hash值写入到对应临时文件</li>
+<li>重命名临时文件为<code>mr-X-Y</code>, X为taskId(mapId), Y为reduceId.</li>
+<li>通知Master, 该任务完成</li>
+</ol>
+<blockquote>
+<p>这里采用约定大于配置思想, 因此不需要通知Master该任务输出文件的文件名, 但是如果是分布式文件系统的话需要给出系统接口返回的文件URL给Master.</p>
+</blockquote>
+<h3 id="Reduce处理"><a href="#Reduce处理" class="headerlink" title="Reduce处理"></a>Reduce处理</h3><p>过程和Map处理类似<br><strong>Reduce的输入</strong>: taskId, intermediateFileNames(中间文件访问路径的集合)</p>
+<p><strong>Reduce的过程</strong></p>
+<ol>
+<li>遍历读取中间文件, 并保存到一个内存的列表中</li>
+<li>按照key来排序列表</li>
+<li>将列表中每一个key和对应的value集合交给reduce函数处理</li>
+<li>结果写入到临时文件并重命名</li>
+<li>通知Master任务完成</li>
+</ol>
+<h2 id="Master"><a href="#Master" class="headerlink" title="Master"></a>Master</h2><p>Master作为MapReduce的协调者, 需要对所有Map、Reduce任务的状态进行管理, 同时在对应的状态下进行任务分配. 总的来说需要具备以下功能:</p>
+<ol>
+<li>任务初始化</li>
+<li>任务分配</li>
+<li>任务完成处理</li>
+</ol>
+<h3 id="任务初始化"><a href="#任务初始化" class="headerlink" title="任务初始化"></a>任务初始化</h3><p>这一过程实际上也是Master的初始化过程. 这一过程, Master需要设定好需要多少个Reduce和Map, 同时对相应的Map和Reduce任务进行初始化, 同时进入整个MapReduce进入Mapping状态.</p>
+<h3 id="任务分配"><a href="#任务分配" class="headerlink" title="任务分配"></a>任务分配</h3><p>这个过程核心在于判断当前MapReduce(Master)处于什么状态从而分配相应的任务:</p>
+<ol>
+<li>如果处于Mapping状态, 遍历MapTasks列表判断每一个任务是否可以被分配<ul>
+<li>判断该任务是否超时, 如果超时则需要将其状态修改为可被分配</li>
+</ul>
+</li>
+<li>如果处于Reducing状态, 遍历ReduceTasks列表进行类似的分配</li>
+<li>如果处于Done状态, 则返回Exit状态码给worker告知整个MapReduce已经结束</li>
+</ol>
+<h3 id="任务完成处理"><a href="#任务完成处理" class="headerlink" title="任务完成处理"></a>任务完成处理</h3><ol>
+<li>给定完成的任务ID: taskId</li>
+<li>根据阶段Mapping/Reducing找到对应的Task</li>
+<li>修改Task的状态为Finished<ul>
+<li>如果该阶段所有任务都已经完成,则推进Master的状态到下一阶段</li>
+</ul>
+</li>
+</ol>
+
+  </div>
+</article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/categories/">Categories</a></li>
+         
+          <li><a href="/tags/">Tags</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A6%82%E8%A7%88"><span class="toc-number">1.</span> <span class="toc-text">概览</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">2.</span> <span class="toc-text">问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Q1-%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E7%94%B1%E8%B0%81%E6%9D%A5%E5%AF%B9%E4%BB%BB%E5%8A%A1%E8%BE%93%E5%85%A5%E6%96%87%E4%BB%B6%E8%BF%9B%E8%A1%8Csplit-%E5%A6%82%E4%BD%95split"><span class="toc-number">2.1.</span> <span class="toc-text">Q1: 什么时候由谁来对任务输入文件进行split? 如何split?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Q2-Map%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">2.2.</span> <span class="toc-text">Q2: Map是什么?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Q3-Reduce%E6%80%8E%E4%B9%88%E7%9F%A5%E9%81%93%E8%87%AA%E5%B7%B1%E5%AF%B9%E5%BA%94%E7%9A%84%E6%98%AF%E5%93%AA%E4%BA%9BIntermediate-files"><span class="toc-number">2.3.</span> <span class="toc-text">Q3: Reduce怎么知道自己对应的是哪些Intermediate files?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Q4-%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86Map%E4%BB%BB%E5%8A%A1%E6%88%96%E8%80%85Reduce%E4%BB%BB%E5%8A%A1%E6%89%A7%E8%A1%8C%E8%B6%85%E6%97%B6%E6%88%96%E5%A4%B1%E8%B4%A5%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">2.4.</span> <span class="toc-text">Q4: 如何处理Map任务或者Reduce任务执行超时或失败的问题</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E5%A4%A7%E7%BA%B2"><span class="toc-number">3.</span> <span class="toc-text">实现大纲</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Worker"><span class="toc-number">3.1.</span> <span class="toc-text">Worker</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Map%E5%A4%84%E7%90%86"><span class="toc-number">3.1.1.</span> <span class="toc-text">Map处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Reduce%E5%A4%84%E7%90%86"><span class="toc-number">3.1.2.</span> <span class="toc-text">Reduce处理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Master"><span class="toc-number">3.2.</span> <span class="toc-text">Master</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%BB%E5%8A%A1%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">3.2.1.</span> <span class="toc-text">任务初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%BB%E5%8A%A1%E5%88%86%E9%85%8D"><span class="toc-number">3.2.2.</span> <span class="toc-text">任务分配</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%BB%E5%8A%A1%E5%AE%8C%E6%88%90%E5%A4%84%E7%90%86"><span class="toc-number">3.2.3.</span> <span class="toc-text">任务完成处理</span></a></li></ol></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://zhiwei-feng.github.io/2022/04/10/outline-of-6-824-lab1-solution/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://zhiwei-feng.github.io/2022/04/10/outline-of-6-824-lab1-solution/&text=[6.824系列] Outline of lab1 solution"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://zhiwei-feng.github.io/2022/04/10/outline-of-6-824-lab1-solution/&title=[6.824系列] Outline of lab1 solution"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://zhiwei-feng.github.io/2022/04/10/outline-of-6-824-lab1-solution/&is_video=false&description=[6.824系列] Outline of lab1 solution"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=[6.824系列] Outline of lab1 solution&body=Check out this article: http://zhiwei-feng.github.io/2022/04/10/outline-of-6-824-lab1-solution/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://zhiwei-feng.github.io/2022/04/10/outline-of-6-824-lab1-solution/&title=[6.824系列] Outline of lab1 solution"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://zhiwei-feng.github.io/2022/04/10/outline-of-6-824-lab1-solution/&title=[6.824系列] Outline of lab1 solution"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://zhiwei-feng.github.io/2022/04/10/outline-of-6-824-lab1-solution/&title=[6.824系列] Outline of lab1 solution"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://zhiwei-feng.github.io/2022/04/10/outline-of-6-824-lab1-solution/&title=[6.824系列] Outline of lab1 solution"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://zhiwei-feng.github.io/2022/04/10/outline-of-6-824-lab1-solution/&name=[6.824系列] Outline of lab1 solution&description=&lt;p&gt;本文主要总结了如何实现&lt;a href=&#34;http://nil.csail.mit.edu/6.824/2020/labs/lab-mr.html&#34;&gt;6.824 lab1&lt;/a&gt;的大纲, 方便自己和读者能够迅速理解MapReduce具体要实现些什么.&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://zhiwei-feng.github.io/2022/04/10/outline-of-6-824-lab1-solution/&t=[6.824系列] Outline of lab1 solution"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2021-2022
+    Fengzw
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/tags/">Tags</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'https-zhiwei-feng-github-io';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+<!-- utterances Comments -->
+
+</body>
+</html>

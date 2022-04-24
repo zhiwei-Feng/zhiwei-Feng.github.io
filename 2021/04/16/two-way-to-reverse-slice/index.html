@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="刷题时，遇到一个需求如下：对一个slice进行翻转。在实现的过程使用了两种方式：  每次插入新元素时，使用append左插入的方式 先正常append右插入，最后再对这个slice进行翻转">
+<meta property="og:type" content="article">
+<meta property="og:title" content="两种翻转slice的方式对比">
+<meta property="og:url" content="http://zhiwei-feng.github.io/2021/04/16/two-way-to-reverse-slice/index.html">
+<meta property="og:site_name" content="Find your passion and work on it">
+<meta property="og:description" content="刷题时，遇到一个需求如下：对一个slice进行翻转。在实现的过程使用了两种方式：  每次插入新元素时，使用append左插入的方式 先正常append右插入，最后再对这个slice进行翻转">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2021/04/17/h3uNKYGrRn82zfd.png">
+<meta property="og:image" content="https://i.loli.net/2021/04/17/1e9W4roOmxgXEf3.png">
+<meta property="article:published_time" content="2021-04-16T15:30:42.000Z">
+<meta property="article:modified_time" content="2022-04-24T18:31:21.737Z">
+<meta property="article:author" content="Fengzw">
+<meta property="article:tag" content="go">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/04/17/h3uNKYGrRn82zfd.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>两种翻转slice的方式对比</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/tags/">Tags</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2021/04/22/be-careful-when-use-append-to-add-slice-to-slice/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2021/04/11/socket-analysis-for-6-824-kv-go/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://zhiwei-feng.github.io/2021/04/16/two-way-to-reverse-slice/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://zhiwei-feng.github.io/2021/04/16/two-way-to-reverse-slice/&text=两种翻转slice的方式对比"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://zhiwei-feng.github.io/2021/04/16/two-way-to-reverse-slice/&title=两种翻转slice的方式对比"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://zhiwei-feng.github.io/2021/04/16/two-way-to-reverse-slice/&is_video=false&description=两种翻转slice的方式对比"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=两种翻转slice的方式对比&body=Check out this article: http://zhiwei-feng.github.io/2021/04/16/two-way-to-reverse-slice/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://zhiwei-feng.github.io/2021/04/16/two-way-to-reverse-slice/&title=两种翻转slice的方式对比"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://zhiwei-feng.github.io/2021/04/16/two-way-to-reverse-slice/&title=两种翻转slice的方式对比"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://zhiwei-feng.github.io/2021/04/16/two-way-to-reverse-slice/&title=两种翻转slice的方式对比"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://zhiwei-feng.github.io/2021/04/16/two-way-to-reverse-slice/&title=两种翻转slice的方式对比"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://zhiwei-feng.github.io/2021/04/16/two-way-to-reverse-slice/&name=两种翻转slice的方式对比&description=&lt;p&gt;刷题时，遇到一个需求如下：对一个slice进行翻转。&lt;br&gt;在实现的过程使用了两种方式：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;每次插入新元素时，使用append左插入的方式&lt;/li&gt;
+&lt;li&gt;先正常append右插入，最后再对这个slice进行翻转&lt;/li&gt;
+&lt;/ul&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://zhiwei-feng.github.io/2021/04/16/two-way-to-reverse-slice/&t=两种翻转slice的方式对比"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8F%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8F%8A%E6%97%B6%E9%97%B4%E5%92%8C%E7%A9%BA%E9%97%B4%E6%B6%88%E8%80%97%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="toc-number">1.</span> <span class="toc-text">两种方式的实现及时间和空间消耗的对比</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.1.</span> <span class="toc-text">实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E5%AF%B9%E6%AF%94"><span class="toc-number">1.2.</span> <span class="toc-text">性能对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%9E%90"><span class="toc-number">1.3.</span> <span class="toc-text">分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A1%A5%E5%85%85"><span class="toc-number">1.3.1.</span> <span class="toc-text">补充</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA"><span class="toc-number">2.</span> <span class="toc-text">结论</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        两种翻转slice的方式对比
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Fengzw</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-04-16T15:30:42.000Z" itemprop="datePublished">2021-04-16</time>
+        
+        (Updated: <time datetime="2022-04-24T18:31:21.737Z" itemprop="dateModified">2022-04-25</time>)
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/Golang/">Golang</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/go/" rel="tag">go</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>刷题时，遇到一个需求如下：对一个slice进行翻转。<br>在实现的过程使用了两种方式：</p>
+<ul>
+<li>每次插入新元素时，使用append左插入的方式</li>
+<li>先正常append右插入，最后再对这个slice进行翻转</li>
+</ul>
+<span id="more"></span>
+
+<h2 id="两种方式的实现及时间和空间消耗的对比"><a href="#两种方式的实现及时间和空间消耗的对比" class="headerlink" title="两种方式的实现及时间和空间消耗的对比"></a>两种方式的实现及时间和空间消耗的对比</h2><h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>下面两个方法实现的功能是一致的</p>
+<ul>
+<li><p>方法1<br>使用左插入法来实现翻转，如下所示</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">method1</span><span class="params">()</span></span> &#123;</span><br><span class="line">    result := <span class="built_in">make</span>([][]<span class="keyword">int</span>, <span class="number">0</span>)</span><br><span class="line">    <span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">100</span>; i++ &#123;</span><br><span class="line">        item := <span class="built_in">make</span>([]<span class="keyword">int</span>, <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">for</span> j := <span class="number">0</span>; j &lt; <span class="number">10</span>; j++ &#123;</span><br><span class="line">            item = <span class="built_in">append</span>(item, i*j)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 左插入</span></span><br><span class="line">        join := [][]<span class="keyword">int</span>&#123;item&#125;</span><br><span class="line">        result = <span class="built_in">append</span>(join, result...)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>方法2<br>先正常append，再翻转</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">method2</span><span class="params">()</span></span> &#123;</span><br><span class="line">    result := <span class="built_in">make</span>([][]<span class="keyword">int</span>, <span class="number">0</span>)</span><br><span class="line">    <span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">100</span>; i++ &#123;</span><br><span class="line">        item := <span class="built_in">make</span>([]<span class="keyword">int</span>, <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">for</span> j := <span class="number">0</span>; j &lt; <span class="number">10</span>; j++ &#123;</span><br><span class="line">            item = <span class="built_in">append</span>(item, i*j)</span><br><span class="line">        &#125;</span><br><span class="line">        result = <span class="built_in">append</span>(result, item)</span><br><span class="line">    &#125;</span><br><span class="line">    tmp := result</span><br><span class="line">    result = <span class="built_in">make</span>([][]<span class="keyword">int</span>, <span class="number">0</span>)</span><br><span class="line">    <span class="keyword">for</span> i := <span class="built_in">len</span>(tmp) - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i-- &#123;</span><br><span class="line">        result = <span class="built_in">append</span>(result, tmp[i])</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="性能对比"><a href="#性能对比" class="headerlink" title="性能对比"></a>性能对比</h3><ul>
+<li><p>时间</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">goos: darwin</span><br><span class="line">goarch: amd64</span><br><span class="line">BenchmarkMethod1-4         17006             69558 ns/op</span><br><span class="line">BenchmarkMethod2-4         43002             27851 ns/op</span><br></pre></td></tr></table></figure>
+<p>时间上，方法2要好于方法1</p>
+</li>
+<li><p>空间</p>
+</li>
+</ul>
+<p><img src="https://i.loli.net/2021/04/17/h3uNKYGrRn82zfd.png" alt="image.png"></p>
+<p>空间上，方法2也要优于方法1</p>
+<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>通过pprof工具对其源码进行分析如下<br><img src="https://i.loli.net/2021/04/17/1e9W4roOmxgXEf3.png" alt="image.png"></p>
+<p>从上图我们发现，<code>result = append(join, result...)</code>语句的内存消耗非常严重，<br>同时这种方法进行append，会使得地址重新分配（因为首地址改变了）致使多余内存和时间的消耗。</p>
+<h4 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h4><p>方法2的翻转可以有两种方法实现</p>
+<ul>
+<li>如上面所示，通过slice反向遍历插入完成翻转</li>
+<li>还可以通过双指针法来翻转</li>
+</ul>
+<p>这里通过一个简单例子比较下双方的性能</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">method1</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> input = <span class="built_in">make</span>([]<span class="keyword">int</span>, <span class="number">0</span>, <span class="number">100</span>)</span><br><span class="line">    <span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="built_in">len</span>(input); i++ &#123;</span><br><span class="line">        input = <span class="built_in">append</span>(input, i)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// method1</span></span><br><span class="line">    <span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="built_in">len</span>(input)/<span class="number">2</span>; i++ &#123;</span><br><span class="line">        j := <span class="built_in">len</span>(input) - <span class="number">1</span> - i</span><br><span class="line">        input[i], input[j] = input[j], input[i]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">method2</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> input = <span class="built_in">make</span>([]<span class="keyword">int</span>, <span class="number">0</span>, <span class="number">100</span>)</span><br><span class="line">    <span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="built_in">len</span>(input); i++ &#123;</span><br><span class="line">        input = <span class="built_in">append</span>(input, i)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// method2</span></span><br><span class="line">    tmp := input</span><br><span class="line">    input = <span class="built_in">make</span>([]<span class="keyword">int</span>, <span class="number">0</span>, <span class="number">100</span>)</span><br><span class="line">    <span class="keyword">for</span> i := <span class="built_in">len</span>(tmp) - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i-- &#123;</span><br><span class="line">        input = <span class="built_in">append</span>(input, tmp[i])</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结果表示，双指针法会更好一些，理由很简单，因为双指针是O(N/2)的</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ go test -run=. -bench=. -benchmem</span><br><span class="line">goos: darwin</span><br><span class="line">goarch: amd64</span><br><span class="line">BenchmarkMethod1-4      71840024                16.9 ns/op             0 B/op          0 allocs/op</span><br><span class="line">BenchmarkMethod2-4      26362216                39.7 ns/op             0 B/op          0 allocs/op</span><br><span class="line">PASS</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>这种情况下推荐使用方法2，同时对于方法1(左插入)的使用要格外谨慎，不当的使用会使得程序的时/空间消耗加剧。</p>
+<blockquote>
+<p>如果有更好的实现方式，或者对上述程序有更好的建议，欢迎下方评论~</p>
+</blockquote>
+
+  </div>
+</article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/categories/">Categories</a></li>
+         
+          <li><a href="/tags/">Tags</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8F%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8F%8A%E6%97%B6%E9%97%B4%E5%92%8C%E7%A9%BA%E9%97%B4%E6%B6%88%E8%80%97%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="toc-number">1.</span> <span class="toc-text">两种方式的实现及时间和空间消耗的对比</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.1.</span> <span class="toc-text">实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E5%AF%B9%E6%AF%94"><span class="toc-number">1.2.</span> <span class="toc-text">性能对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%9E%90"><span class="toc-number">1.3.</span> <span class="toc-text">分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A1%A5%E5%85%85"><span class="toc-number">1.3.1.</span> <span class="toc-text">补充</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA"><span class="toc-number">2.</span> <span class="toc-text">结论</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://zhiwei-feng.github.io/2021/04/16/two-way-to-reverse-slice/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://zhiwei-feng.github.io/2021/04/16/two-way-to-reverse-slice/&text=两种翻转slice的方式对比"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://zhiwei-feng.github.io/2021/04/16/two-way-to-reverse-slice/&title=两种翻转slice的方式对比"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://zhiwei-feng.github.io/2021/04/16/two-way-to-reverse-slice/&is_video=false&description=两种翻转slice的方式对比"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=两种翻转slice的方式对比&body=Check out this article: http://zhiwei-feng.github.io/2021/04/16/two-way-to-reverse-slice/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://zhiwei-feng.github.io/2021/04/16/two-way-to-reverse-slice/&title=两种翻转slice的方式对比"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://zhiwei-feng.github.io/2021/04/16/two-way-to-reverse-slice/&title=两种翻转slice的方式对比"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://zhiwei-feng.github.io/2021/04/16/two-way-to-reverse-slice/&title=两种翻转slice的方式对比"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://zhiwei-feng.github.io/2021/04/16/two-way-to-reverse-slice/&title=两种翻转slice的方式对比"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://zhiwei-feng.github.io/2021/04/16/two-way-to-reverse-slice/&name=两种翻转slice的方式对比&description=&lt;p&gt;刷题时，遇到一个需求如下：对一个slice进行翻转。&lt;br&gt;在实现的过程使用了两种方式：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;每次插入新元素时，使用append左插入的方式&lt;/li&gt;
+&lt;li&gt;先正常append右插入，最后再对这个slice进行翻转&lt;/li&gt;
+&lt;/ul&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://zhiwei-feng.github.io/2021/04/16/two-way-to-reverse-slice/&t=两种翻转slice的方式对比"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2021-2022
+    Fengzw
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/tags/">Tags</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'https-zhiwei-feng-github-io';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+<!-- utterances Comments -->
+
+</body>
+</html>

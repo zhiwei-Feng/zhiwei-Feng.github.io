@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="本系列文章是对Grokking the Coding Interview: Patterns for Coding Questions课程的总结，编程语言使用Go。读者如果想要更细致的了解，请自行购买课程学习。 问题背景在处理数组和链表的时候，我们经常会需要找出满足某些条件的连续子列, 比如子列的和最大等，这个时候就可以使用滑动窗口的思想来进行解答。这里注意的是子列可以是固定大小也可以是可变大小，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试16种代码模式总结(1) - 滑动窗口">
+<meta property="og:url" content="http://zhiwei-feng.github.io/2021/04/04/sliding-window/index.html">
+<meta property="og:site_name" content="Find your passion and work on it">
+<meta property="og:description" content="本系列文章是对Grokking the Coding Interview: Patterns for Coding Questions课程的总结，编程语言使用Go。读者如果想要更细致的了解，请自行购买课程学习。 问题背景在处理数组和链表的时候，我们经常会需要找出满足某些条件的连续子列, 比如子列的和最大等，这个时候就可以使用滑动窗口的思想来进行解答。这里注意的是子列可以是固定大小也可以是可变大小，">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-04-04T14:37:30.000Z">
+<meta property="article:modified_time" content="2022-04-24T18:31:21.737Z">
+<meta property="article:author" content="Fengzw">
+<meta property="article:tag" content="go">
+<meta property="article:tag" content="algorithm">
+<meta property="article:tag" content="sliding window">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>面试16种代码模式总结(1) - 滑动窗口</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/tags/">Tags</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2021/04/11/socket-analysis-for-6-824-kv-go/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://zhiwei-feng.github.io/2021/04/04/sliding-window/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://zhiwei-feng.github.io/2021/04/04/sliding-window/&text=面试16种代码模式总结(1) - 滑动窗口"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://zhiwei-feng.github.io/2021/04/04/sliding-window/&title=面试16种代码模式总结(1) - 滑动窗口"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://zhiwei-feng.github.io/2021/04/04/sliding-window/&is_video=false&description=面试16种代码模式总结(1) - 滑动窗口"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=面试16种代码模式总结(1) - 滑动窗口&body=Check out this article: http://zhiwei-feng.github.io/2021/04/04/sliding-window/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://zhiwei-feng.github.io/2021/04/04/sliding-window/&title=面试16种代码模式总结(1) - 滑动窗口"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://zhiwei-feng.github.io/2021/04/04/sliding-window/&title=面试16种代码模式总结(1) - 滑动窗口"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://zhiwei-feng.github.io/2021/04/04/sliding-window/&title=面试16种代码模式总结(1) - 滑动窗口"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://zhiwei-feng.github.io/2021/04/04/sliding-window/&title=面试16种代码模式总结(1) - 滑动窗口"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://zhiwei-feng.github.io/2021/04/04/sliding-window/&name=面试16种代码模式总结(1) - 滑动窗口&description=&lt;p&gt;本系列文章是对&lt;a href=&#34;https://www.educative.io/courses/grokking-the-coding-interview&#34;&gt;Grokking the Coding Interview: Patterns for Coding Questions&lt;/a&gt;课程的总结，编程语言使用Go。读者如果想要更细致的了解，请自行购买课程学习。&lt;/p&gt;
+&lt;h2 id=&#34;问题背景&#34;&gt;&lt;a href=&#34;#问题背景&#34; class=&#34;headerlink&#34; title=&#34;问题背景&#34;&gt;&lt;/a&gt;问题背景&lt;/h2&gt;&lt;p&gt;在处理数组和链表的时候，我们经常会需要找出满足某些条件的连续子列, 比如子列的和最大等，这个时候就可以使用滑动窗口的思想来进行解答。这里注意的是子列可以是固定大小也可以是可变大小，两种情况有相应的处理方式。&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://zhiwei-feng.github.io/2021/04/04/sliding-window/&t=面试16种代码模式总结(1) - 滑动窗口"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E8%83%8C%E6%99%AF"><span class="toc-number">1.</span> <span class="toc-text">问题背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E6%B3%95%E6%80%BB%E7%BB%93"><span class="toc-number">2.</span> <span class="toc-text">解法总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F"><span class="toc-number">2.1.</span> <span class="toc-text">固定大小</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%AF%E5%8F%98%E5%A4%A7%E5%B0%8F"><span class="toc-number">2.2.</span> <span class="toc-text">可变大小</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%B9%E6%AE%8A%E4%BE%8B%E5%AD%90"><span class="toc-number">3.</span> <span class="toc-text">特殊例子</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E5%B0%8F%E8%A6%86%E7%9B%96%E5%AD%90%E4%B8%B2"><span class="toc-number">3.1.</span> <span class="toc-text">最小覆盖子串</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%B2%E8%81%94%E6%89%80%E6%9C%89%E5%8D%95%E8%AF%8D%E7%9A%84%E5%AD%90%E4%B8%B2"><span class="toc-number">3.2.</span> <span class="toc-text">串联所有单词的子串</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#REFERENCE"><span class="toc-number">4.</span> <span class="toc-text">REFERENCE</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        面试16种代码模式总结(1) - 滑动窗口
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Fengzw</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-04-04T14:37:30.000Z" itemprop="datePublished">2021-04-04</time>
+        
+        (Updated: <time datetime="2022-04-24T18:31:21.737Z" itemprop="dateModified">2022-04-25</time>)
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/%E9%9D%A2%E8%AF%95/">面试</a> › <a class="category-link" href="/categories/%E9%9D%A2%E8%AF%95/16%E7%A7%8D%E4%BB%A3%E7%A0%81%E6%A8%A1%E5%BC%8F/">16种代码模式</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/algorithm/" rel="tag">algorithm</a>, <a class="tag-link-link" href="/tags/go/" rel="tag">go</a>, <a class="tag-link-link" href="/tags/sliding-window/" rel="tag">sliding window</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>本系列文章是对<a target="_blank" rel="noopener" href="https://www.educative.io/courses/grokking-the-coding-interview">Grokking the Coding Interview: Patterns for Coding Questions</a>课程的总结，编程语言使用Go。读者如果想要更细致的了解，请自行购买课程学习。</p>
+<h2 id="问题背景"><a href="#问题背景" class="headerlink" title="问题背景"></a>问题背景</h2><p>在处理数组和链表的时候，我们经常会需要找出满足某些条件的连续子列, 比如子列的和最大等，这个时候就可以使用滑动窗口的思想来进行解答。这里注意的是子列可以是固定大小也可以是可变大小，两种情况有相应的处理方式。</p>
+<span id="more"></span>
+
+<p>下面先给出一个例子，比如在给定一个数组，找出其中每个size为K的连续子列的平均值。  </p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Array: [1, 3, 2, 6, -1, 4, 1, 8, 2], K=5</span><br><span class="line"></span><br><span class="line">Output: [2.2, 2.8, 2.4, 3.6, 2.8]</span><br></pre></td></tr></table></figure>
+
+<p>滑动窗口的解决方案如下:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">findAveragesOfSubArraysBySlidingWindow</span><span class="params">(K <span class="keyword">int</span>, arr []<span class="keyword">int</span>)</span> []<span class="title">float64</span></span> &#123;</span><br><span class="line">    results := <span class="built_in">make</span>([]<span class="keyword">float64</span>, <span class="built_in">len</span>(arr)-K+<span class="number">1</span>)</span><br><span class="line">    windowSum := <span class="number">0</span></span><br><span class="line">    windowStart := <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> windowEnd := <span class="number">0</span>; windowEnd &lt; <span class="built_in">len</span>(arr); windowEnd++ &#123;</span><br><span class="line">        <span class="comment">// 把下个元素加上</span></span><br><span class="line">        windowSum += arr[windowEnd]</span><br><span class="line">        <span class="comment">// 滑动窗口，特别地，如果没有达到K个则不滑动</span></span><br><span class="line">        <span class="keyword">if</span> windowEnd &gt;= K<span class="number">-1</span> &#123;</span><br><span class="line">            <span class="comment">// 当前windowSum计算了整个窗口的和</span></span><br><span class="line">            results[windowStart] = <span class="keyword">float64</span>(windowSum) / <span class="keyword">float64</span>(K)</span><br><span class="line">            <span class="comment">// 当前窗口计算完后，移动窗口需要先减去原来窗口头部的元素</span></span><br><span class="line">            windowSum -= arr[windowStart]</span><br><span class="line">            windowStart++</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> results</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="解法总结"><a href="#解法总结" class="headerlink" title="解法总结"></a>解法总结</h2><p>根据窗口大小是否固定，分为固定大小和可变大小</p>
+<h3 id="固定大小"><a href="#固定大小" class="headerlink" title="固定大小"></a>固定大小</h3><p>这里拿 找出size=k的最大连续子序列和 作为例子</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Given an array of positive numbers and a positive number k,</span><br><span class="line">find the maximum sum of any contiguous subarray of size k.</span><br><span class="line"></span><br><span class="line">Input: [2, 1, 5, 1, 3, 2], k=3</span><br><span class="line">Output: 9</span><br><span class="line">Explanation: Subarray with maximum sum is [5, 1, 3].</span><br><span class="line"></span><br><span class="line">Input: [2, 3, 4, 1, 5], k=2</span><br><span class="line">Output: 7</span><br><span class="line">Explanation: Subarray with maximum sum is [3, 4].</span><br></pre></td></tr></table></figure>
+
+<p>解决方案</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">max</span><span class="params">(x, y <span class="keyword">int</span>)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">    <span class="keyword">if</span> x &gt; y &#123;</span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> y</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">solution</span><span class="params">(arr []<span class="keyword">int</span>, k <span class="keyword">int</span>)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> (</span><br><span class="line">        windowStart = <span class="number">0</span></span><br><span class="line">        windowSum = <span class="number">0</span> <span class="comment">// 用于记录当前窗口的状态</span></span><br><span class="line">        maxSum = <span class="number">0</span> <span class="comment">// 用于记录最好的状态</span></span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> windowEnd:=<span class="number">0</span>;windowEnd&lt;<span class="built_in">len</span>(arr);windowEnd++&#123;</span><br><span class="line">        <span class="comment">// 这一步是窗口的右侧进行一格扩张，同时更新当前窗口的状态</span></span><br><span class="line">        windowSum += arr[windowEnd]</span><br><span class="line">        <span class="comment">// 判断当前窗口是否满足相应条件</span></span><br><span class="line">        <span class="keyword">if</span> windowEnd &gt;= k<span class="number">-1</span>&#123;</span><br><span class="line">            <span class="comment">// 更新最好的状态</span></span><br><span class="line">            maxSum = max(maxSum, windowSum)</span><br><span class="line">            <span class="comment">// 收缩窗口左侧</span></span><br><span class="line">            windowSum -= arr[windowStart]</span><br><span class="line">            windowStart--</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> maxSum</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>相关练习: <a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/permutation-in-string/">[1]</a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/find-all-anagrams-in-a-string/">[2]</a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/substring-with-concatenation-of-all-words/">[3]</a></p>
+</blockquote>
+<h3 id="可变大小"><a href="#可变大小" class="headerlink" title="可变大小"></a>可变大小</h3><p>这里通过<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/minimum-size-subarray-sum/">长度最小的子数组</a>来说明</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">min</span><span class="params">(i, j <span class="keyword">int</span>)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">    <span class="keyword">if</span> i&lt;j &#123;</span><br><span class="line">        <span class="keyword">return</span> i</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> j</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">minSubArrayLen</span><span class="params">(target <span class="keyword">int</span>, nums []<span class="keyword">int</span>)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span>(</span><br><span class="line">        windowStart = <span class="number">0</span></span><br><span class="line">        windowSum = <span class="number">0</span></span><br><span class="line">        minSize = <span class="number">-1</span></span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> windowEnd:=<span class="number">0</span>;windowEnd&lt;<span class="built_in">len</span>(nums);windowEnd++&#123;</span><br><span class="line">        <span class="comment">// 窗口右侧扩张，这个部分和固定大小是一样的</span></span><br><span class="line">        windowSum+=nums[windowEnd]</span><br><span class="line">        <span class="comment">// 这个部分是与固定大小类型最大的区别</span></span><br><span class="line">        <span class="comment">// 不同于固定大小每次的右侧扩张和左侧收缩是同步的</span></span><br><span class="line">        <span class="comment">// 可变大小的左侧收缩需要循环判断窗口是否满足条件</span></span><br><span class="line">        <span class="comment">// 可能右侧扩张了很多次，但是左侧才收缩一回</span></span><br><span class="line">        <span class="comment">// 也可能右侧扩张一次，左侧需要收缩几回</span></span><br><span class="line">        <span class="keyword">for</span> windowSum&gt;=target&#123;</span><br><span class="line">            <span class="keyword">if</span> minSize==<span class="number">-1</span>&#123;</span><br><span class="line">                minSize = windowEnd-windowStart+<span class="number">1</span></span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                minSize = min(minSize, windowEnd-windowStart+<span class="number">1</span>)</span><br><span class="line">            &#125; </span><br><span class="line">            windowSum-=nums[windowStart]</span><br><span class="line">            windowStart++</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 对于一些情况条件需要进行后处理，比如当收缩窗口直到窗口内单一字符数量&lt;k</span></span><br><span class="line">        <span class="comment">// 然后再比较当前窗口的大小</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> minSize==<span class="number">-1</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> minSize</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>相关练习题: <a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/minimum-size-subarray-sum/">[1]</a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/longest-substring-with-at-most-k-distinct-characters/">[2]</a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/fruit-into-baskets/">[3]</a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/">[4]</a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/longest-repeating-character-replacement/">[5]</a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/max-consecutive-ones-iii/">[6]</a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/minimum-window-substring/">[7]</a></p>
+</blockquote>
+<h2 id="特殊例子"><a href="#特殊例子" class="headerlink" title="特殊例子"></a>特殊例子</h2><h3 id="最小覆盖子串"><a href="#最小覆盖子串" class="headerlink" title="最小覆盖子串"></a>最小覆盖子串</h3><p>原题见<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/minimum-window-substring/">leetcode</a></p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">findSubstring</span><span class="params">(str, pattern <span class="keyword">string</span>)</span> <span class="title">string</span></span> &#123;</span><br><span class="line">    <span class="comment">// 边界 </span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(pattern)&gt;<span class="built_in">len</span>(str)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> (</span><br><span class="line">        windowStart = <span class="number">0</span></span><br><span class="line">        matched     = <span class="number">0</span></span><br><span class="line">        minLength   = <span class="built_in">len</span>(str) + <span class="number">1</span></span><br><span class="line">        subStrStart = <span class="number">0</span></span><br><span class="line">        patternMap  = <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">byte</span>]<span class="keyword">int</span>)</span><br><span class="line">    )</span><br><span class="line">    <span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="built_in">len</span>(pattern); i++ &#123;</span><br><span class="line">        patternMap[pattern[i]]++</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> windowEnd := <span class="number">0</span>; windowEnd &lt; <span class="built_in">len</span>(str); windowEnd++ &#123;</span><br><span class="line">        wright := str[windowEnd]</span><br><span class="line">        <span class="keyword">if</span> _, ok := patternMap[wright]; ok &#123;</span><br><span class="line">            patternMap[wright]-- </span><br><span class="line">            <span class="comment">// 关键点1, 不再是==0，而是&gt;=0，因为包含所有的字符</span></span><br><span class="line">            <span class="keyword">if</span> patternMap[wright] &gt;= <span class="number">0</span> &#123;</span><br><span class="line">                matched++</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 如果当前window包含pattern所有的字符，则从左收缩窗口至不完全包含状态 </span></span><br><span class="line">        <span class="comment">// 注意这里等号右侧不是len(patternMap)，因为是要匹配所有字符</span></span><br><span class="line">        <span class="keyword">for</span> matched == <span class="built_in">len</span>(pattern) &#123; </span><br><span class="line">            <span class="keyword">if</span> minLength &gt; windowEnd-windowStart+<span class="number">1</span> &#123;</span><br><span class="line">                minLength = windowEnd - windowStart + <span class="number">1</span></span><br><span class="line">                subStrStart = windowStart</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            wleft := str[windowStart]</span><br><span class="line">            <span class="keyword">if</span> _, ok := patternMap[wleft]; ok &#123;</span><br><span class="line">                <span class="comment">// 关键点2，只要有一个匹配的字符移除了窗口，则停止收缩</span></span><br><span class="line">                <span class="keyword">if</span> patternMap[wleft] == <span class="number">0</span> &#123;</span><br><span class="line">                    matched--</span><br><span class="line">                &#125;</span><br><span class="line">                patternMap[wleft]++</span><br><span class="line">            &#125;</span><br><span class="line">            windowStart++</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> minLength &gt; <span class="built_in">len</span>(str) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;&quot;</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> str[subStrStart : subStrStart+minLength]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>FAQ: 这里对上述代码做一定的解释，主要困惑点在于两个关键点</strong><br>Q: 为什么关键点1处是&gt;=0？<br>A: 因为是要匹配所有的字符，因为每遇到一个需要匹配的字符，我们都需要对patternMap中对应值做减法并matched++, 直到我们匹配完了pattern所有该字符，此时对于多余该字符我们只需要更新patternMap，但是不必再更新matched。</p>
+<p>Q: 为什么关键点2处是==0？<br>A: 这里注意，如果窗口同一个字符没有冗余，那么移除了一个该字符则意味着匹配不完全，但是如果窗口内该字符有冗余，比如pattern是<code>aab</code>，而窗口内有3个<code>a</code>，此时<code>a</code>有冗余，如果收缩窗口只移出了一个<code>a</code>，那么此时窗口依然是满足匹配完全条件的，反映到代码上，收缩前<code>patternMap[&#39;a&#39;] = -1</code> (在2的基础-3)，收缩后<code>patternMap[&#39;a&#39;]=0</code>，因此如果收缩掉下一个<code>a</code>，则需要matched–了。</p>
+<h3 id="串联所有单词的子串"><a href="#串联所有单词的子串" class="headerlink" title="串联所有单词的子串"></a>串联所有单词的子串</h3><p>原题见<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/substring-with-concatenation-of-all-words/">leetcode</a><br>这个题目主要要对题意理解清楚，首先目标子串需要满足几个条件：</p>
+<ol>
+<li>长度等于单词列表中的每个单词长度*单词个数</li>
+<li>子串不可以出现不在列表上的其他单词</li>
+</ol>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">findWordConcatenation</span><span class="params">(str <span class="keyword">string</span>, words []<span class="keyword">string</span>)</span> []<span class="title">int</span></span> &#123;</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(words)==<span class="number">0</span>||<span class="built_in">len</span>(str)==<span class="number">0</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> []<span class="keyword">int</span>&#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> (</span><br><span class="line">        wordFreqMap = <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">int</span>)</span><br><span class="line">        wordsCount  = <span class="built_in">len</span>(words)</span><br><span class="line">        wordLength  = <span class="built_in">len</span>(words[<span class="number">0</span>])</span><br><span class="line">        <span class="comment">// 存储满足条件的index</span></span><br><span class="line">        startIndex  = <span class="built_in">make</span>([]<span class="keyword">int</span>, <span class="number">0</span>, <span class="number">10</span>) </span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 记录每个单词出现的频率</span></span><br><span class="line">    <span class="keyword">for</span> _, v := <span class="keyword">range</span> words &#123;</span><br><span class="line">        wordFreqMap[v]++</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 注意这个不是常规的sliding window pattern </span></span><br><span class="line">    <span class="comment">// i表示的是一个子串的起始位置，从条件可知每个子串是固定长度的 </span></span><br><span class="line">    <span class="comment">// 所以i最大为len(str)-wordLength*wordsCount</span></span><br><span class="line">    <span class="keyword">for</span> i := <span class="number">0</span>; i &lt;= <span class="built_in">len</span>(str)-wordLength*wordsCount; i++ &#123;</span><br><span class="line">        wordsSeenMap := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">int</span>) <span class="comment">// key1: 保存看过的word的数量</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 对从当前index i开始的长度为wordLength*wordsCount的string进行判定</span></span><br><span class="line">        <span class="keyword">for</span> j := <span class="number">0</span>; j &lt; wordsCount; j++ &#123;</span><br><span class="line">            nextWordIndex := i + j*wordLength <span class="comment">// 当前word的开始index</span></span><br><span class="line">            word := str[nextWordIndex : nextWordIndex+wordLength]</span><br><span class="line">            <span class="comment">// 如果出现不在words数组中的word，则直接跳出</span></span><br><span class="line">            <span class="keyword">if</span> _, ok := wordFreqMap[word]; !ok &#123;</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            wordsSeenMap[word]++ </span><br><span class="line">            <span class="comment">// 如果words数组中某个word数量出现次数过多意味着一定会有其他单词不在，则也直接跳出</span></span><br><span class="line">            <span class="keyword">if</span> wordsSeenMap[word] &gt; wordFreqMap[word] &#123;</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 如果遍历到该string的最后一个字符都没跳出循环，意味该string是满足条件的</span></span><br><span class="line">            <span class="keyword">if</span> j == wordsCount<span class="number">-1</span> &#123;</span><br><span class="line">                startIndex = <span class="built_in">append</span>(startIndex, i)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// ===end===</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> startIndex</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="REFERENCE"><a href="#REFERENCE" class="headerlink" title="REFERENCE"></a>REFERENCE</h2><p>[1] <a target="_blank" rel="noopener" href="https://www.educative.io/courses/grokking-the-coding-interview">https://www.educative.io/courses/grokking-the-coding-interview</a><br>[2] <a target="_blank" rel="noopener" href="https://github.com/zhiwei-Feng/Golang-Grokking-the-Coding-Interview-Patterns-for-Coding-Questions">https://github.com/zhiwei-Feng/Golang-Grokking-the-Coding-Interview-Patterns-for-Coding-Questions</a></p>
+
+  </div>
+</article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/categories/">Categories</a></li>
+         
+          <li><a href="/tags/">Tags</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E8%83%8C%E6%99%AF"><span class="toc-number">1.</span> <span class="toc-text">问题背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E6%B3%95%E6%80%BB%E7%BB%93"><span class="toc-number">2.</span> <span class="toc-text">解法总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F"><span class="toc-number">2.1.</span> <span class="toc-text">固定大小</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%AF%E5%8F%98%E5%A4%A7%E5%B0%8F"><span class="toc-number">2.2.</span> <span class="toc-text">可变大小</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%B9%E6%AE%8A%E4%BE%8B%E5%AD%90"><span class="toc-number">3.</span> <span class="toc-text">特殊例子</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E5%B0%8F%E8%A6%86%E7%9B%96%E5%AD%90%E4%B8%B2"><span class="toc-number">3.1.</span> <span class="toc-text">最小覆盖子串</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%B2%E8%81%94%E6%89%80%E6%9C%89%E5%8D%95%E8%AF%8D%E7%9A%84%E5%AD%90%E4%B8%B2"><span class="toc-number">3.2.</span> <span class="toc-text">串联所有单词的子串</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#REFERENCE"><span class="toc-number">4.</span> <span class="toc-text">REFERENCE</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://zhiwei-feng.github.io/2021/04/04/sliding-window/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://zhiwei-feng.github.io/2021/04/04/sliding-window/&text=面试16种代码模式总结(1) - 滑动窗口"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://zhiwei-feng.github.io/2021/04/04/sliding-window/&title=面试16种代码模式总结(1) - 滑动窗口"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://zhiwei-feng.github.io/2021/04/04/sliding-window/&is_video=false&description=面试16种代码模式总结(1) - 滑动窗口"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=面试16种代码模式总结(1) - 滑动窗口&body=Check out this article: http://zhiwei-feng.github.io/2021/04/04/sliding-window/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://zhiwei-feng.github.io/2021/04/04/sliding-window/&title=面试16种代码模式总结(1) - 滑动窗口"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://zhiwei-feng.github.io/2021/04/04/sliding-window/&title=面试16种代码模式总结(1) - 滑动窗口"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://zhiwei-feng.github.io/2021/04/04/sliding-window/&title=面试16种代码模式总结(1) - 滑动窗口"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://zhiwei-feng.github.io/2021/04/04/sliding-window/&title=面试16种代码模式总结(1) - 滑动窗口"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://zhiwei-feng.github.io/2021/04/04/sliding-window/&name=面试16种代码模式总结(1) - 滑动窗口&description=&lt;p&gt;本系列文章是对&lt;a href=&#34;https://www.educative.io/courses/grokking-the-coding-interview&#34;&gt;Grokking the Coding Interview: Patterns for Coding Questions&lt;/a&gt;课程的总结，编程语言使用Go。读者如果想要更细致的了解，请自行购买课程学习。&lt;/p&gt;
+&lt;h2 id=&#34;问题背景&#34;&gt;&lt;a href=&#34;#问题背景&#34; class=&#34;headerlink&#34; title=&#34;问题背景&#34;&gt;&lt;/a&gt;问题背景&lt;/h2&gt;&lt;p&gt;在处理数组和链表的时候，我们经常会需要找出满足某些条件的连续子列, 比如子列的和最大等，这个时候就可以使用滑动窗口的思想来进行解答。这里注意的是子列可以是固定大小也可以是可变大小，两种情况有相应的处理方式。&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://zhiwei-feng.github.io/2021/04/04/sliding-window/&t=面试16种代码模式总结(1) - 滑动窗口"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2021-2022
+    Fengzw
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/tags/">Tags</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'https-zhiwei-feng-github-io';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+<!-- utterances Comments -->
+
+</body>
+</html>
