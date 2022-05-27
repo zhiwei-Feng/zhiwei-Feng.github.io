@@ -2,50 +2,54 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>http://zhiwei-Feng.github.io/2022/01/01/2021summary/</loc>
-    <lastmod>2022-05-17</lastmod>
+    <lastmod>2022-05-27</lastmod>
   </url>
   <url>
     <loc>http://zhiwei-Feng.github.io/2021/04/22/be-careful-when-use-append-to-add-slice-to-slice/</loc>
-    <lastmod>2022-05-17</lastmod>
+    <lastmod>2022-05-27</lastmod>
   </url>
   <url>
     <loc>http://zhiwei-Feng.github.io/2022/04/21/bugfix-of-pytorch-out-of-memory/</loc>
-    <lastmod>2022-05-17</lastmod>
+    <lastmod>2022-05-27</lastmod>
   </url>
   <url>
     <loc>http://zhiwei-Feng.github.io/2021/11/30/gorm-for-update/</loc>
-    <lastmod>2022-05-17</lastmod>
+    <lastmod>2022-05-27</lastmod>
   </url>
   <url>
     <loc>http://zhiwei-Feng.github.io/2022/04/10/outline-of-6-824-lab1-solution/</loc>
-    <lastmod>2022-05-17</lastmod>
+    <lastmod>2022-05-27</lastmod>
   </url>
   <url>
     <loc>http://zhiwei-Feng.github.io/2022/04/26/outline-of-6-824-lab2A-solution/</loc>
-    <lastmod>2022-05-17</lastmod>
+    <lastmod>2022-05-27</lastmod>
   </url>
   <url>
     <loc>http://zhiwei-Feng.github.io/2021/04/04/sliding-window/</loc>
-    <lastmod>2022-05-17</lastmod>
+    <lastmod>2022-05-27</lastmod>
   </url>
   <url>
     <loc>http://zhiwei-Feng.github.io/2021/04/11/socket-analysis-for-6-824-kv-go/</loc>
-    <lastmod>2022-05-17</lastmod>
+    <lastmod>2022-05-27</lastmod>
   </url>
   <url>
     <loc>http://zhiwei-Feng.github.io/2022/04/18/summary-of-combination-sum/</loc>
-    <lastmod>2022-05-17</lastmod>
+    <lastmod>2022-05-27</lastmod>
+  </url>
+  <url>
+    <loc>http://zhiwei-Feng.github.io/2022/05/27/summary-of-largest-rectangle/</loc>
+    <lastmod>2022-05-27</lastmod>
   </url>
   <url>
     <loc>http://zhiwei-Feng.github.io/2022/04/14/summary-of-search-in-rotated-sorted-array/</loc>
-    <lastmod>2022-05-17</lastmod>
+    <lastmod>2022-05-27</lastmod>
   </url>
   <url>
     <loc>http://zhiwei-Feng.github.io/2021/04/16/two-way-to-reverse-slice/</loc>
-    <lastmod>2022-05-17</lastmod>
+    <lastmod>2022-05-27</lastmod>
   </url>
   <url>
     <loc>http://zhiwei-Feng.github.io/2022/05/18/unexpected-error-in-pytorch-backward/</loc>
-    <lastmod>2022-05-17</lastmod>
+    <lastmod>2022-05-27</lastmod>
   </url>
 </urlset> 
