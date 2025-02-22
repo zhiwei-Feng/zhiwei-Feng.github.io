@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://zhiwei-Feng.github.io/2021/04/16/two-way-to-reverse-slice/</loc>
+    <lastmod>2025-02-22</lastmod>
+  </url>
+  <url>
     <loc>http://zhiwei-Feng.github.io/2022/04/10/outline-of-6-824-lab1-solution/</loc>
     <lastmod>2025-02-22</lastmod>
   </url>
@@ -22,10 +26,6 @@
   </url>
   <url>
     <loc>http://zhiwei-Feng.github.io/2022/05/27/summary-of-largest-rectangle/</loc>
-    <lastmod>2025-02-22</lastmod>
-  </url>
-  <url>
-    <loc>http://zhiwei-Feng.github.io/2021/04/16/two-way-to-reverse-slice/</loc>
     <lastmod>2025-02-22</lastmod>
   </url>
   <url>
