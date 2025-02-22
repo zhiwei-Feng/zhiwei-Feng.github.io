@@ -110,7 +110,9 @@ deploy:
   type: git
   repo: https://github.com/zhiwei-Feng/zhiwei-Feng.github.io.git
   branch: gh-pages-v2
-  name: fengzw
+  name: zhiwei-feng
+  mail: zhiwei.feng1995@gmail.com
+  email: zhiwei.feng1995@gmail.com
 
 # Search
 ## See: https://github.com/theme-next/hexo-generator-searchdb
