@@ -210,8 +210,9 @@ navbar:
     #   icon: fa-regular fa-chart-bar
     About: 
       icon: fa-regular fa-user
-      submenus:
-        Me: /about
+      path: /about
+      # submenus:
+        # Me: /about
         # Github: https://github.com/EvanNotFound/hexo-theme-redefine
         # Blog: https://ohevan.com
         # Friends: /friends
@@ -245,15 +246,15 @@ home:
     announcement: # Announcement text
     show_on_mobile: true # Whether to show sidebar navigation on mobile sheet menu
     links:
-      # Archives: 
-      #   path: /archives 
-      #   icon: fa-regular fa-archive # can be empty
-      # Tags: 
-      #   path: /tags 
-      #   icon: fa-regular fa-tags # can be empty
-      # Categories: 
-      #   path: /categories 
-      #   icon: fa-regular fa-folder # can be empty
+       Archives:
+         path: /archives
+         icon: fa-regular fa-archive # can be empty
+       Tags:
+         path: /tags
+         icon: fa-regular fa-tags # can be empty
+       Categories:
+         path: /categories
+         icon: fa-regular fa-folder # can be empty
       # ...... # you can add more
   # Article date format
   article_date_format: auto # auto, relative, YYYY-MM-DD, YYYY-MM-DD HH:mm:ss etc.
@@ -297,7 +298,7 @@ articles:
     min2read: true # Whether to display reading time
   # Author label
   author_label: 
-    enable: fale # Whether to enable
+    enable: false # Whether to enable
     auto: false # Whether to automatically add author label, e.g. Lv1, Lv2, Lv3...
     list: []
   # Code block settings
@@ -315,7 +316,7 @@ articles:
   toc:
     enable: true # Whether to enable TOC
     max_depth: 3 # TOC depth
-    number: false # Whether to add number to TOC automatically
+    number: true # Whether to add number to TOC automatically
     expand: true # Whether to expand TOC
     init_open: true # Open toc by default
   # Whether to enable copyright notice
@@ -329,7 +330,7 @@ articles:
   # Article recommendation. Requires nodejieba (npm install nodejieba). Transplanted from hexo-theme-volantis.
   recommendation:
     # Whether to enable article recommendation
-    enable: true
+    enable: false
     # Article recommendation title
     title: Article Recommendation
     # Max number of articles to display
