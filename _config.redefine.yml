@@ -13,9 +13,9 @@ info:
   # Site title
   title: '!End'
   # Site subtitle
-  subtitle: Find your passion and work on it
+  subtitle: Finite the span of life, infinite the pursuit of wisdom.
   # Author name
-  author: fengzw
+  author: 𝖋𝖊𝖓𝖌𝖟𝖜
   # Site URL
   url: https://zhiwei-feng.github.io
 # BASIC INFORMATION <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< end
@@ -89,7 +89,7 @@ global:
   # Whether to enable Preloader.
   preloader:
     enable: true
-    custom_message: # Custom message. If empty, the site title will be displayed
+    custom_message: '你是我存在的证明.' # Custom message. If empty, the site title will be displayed
   # Whether to enable open graph
   open_graph:
     enable: true
@@ -131,9 +131,9 @@ home_banner:
   title: '!End'
   # Home banner subtitle
   subtitle:
-    text: ['Hello World'] # subtitle text, array
+    text: ['Walk Tall'] # subtitle text, array
     hitokoto:  # 一言配置
-      enable: true # Whether to enable hitokoto
+      enable: false # Whether to enable hitokoto
       show_author: false # Whether to show author
       api: https://v1.hitokoto.cn # API URL, can add types, see https://developer.hitokoto.cn/sentence/#%E5%8F%A5%E5%AD%90%E7%B1%BB%E5%9E%8B-%E5%8F%82%E6%95%B0
     typing_speed: 100 # Typing speed (ms)
