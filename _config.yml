@@ -101,12 +101,16 @@ ignore:
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
 # theme: icarus
-theme: cactus
+# theme: cactus
+theme: redefine
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
-  type: ''
+  type: git
+  repo: https://github.com/zhiwei-Feng/zhiwei-Feng.github.io.git
+  branch: gh-pages-v2
+  name: fengzw
 
 # Search
 ## See: https://github.com/theme-next/hexo-generator-searchdb
@@ -120,3 +124,5 @@ sitemap:
   path: sitemap.xml
 baidusitemap:
   path: baidusitemap.xml
+
+all_minifier: true

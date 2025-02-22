@@ -12,6 +12,8 @@ tags:
 ```
 RuntimeError: Trying to backward through the graph a second time, but the saved intermediate results have already been freed. Specify retain_graph=True when calling backward the first time.
 ```
+
+<!-- more -->
 参考一些网上的[解答](https://discuss.pytorch.org/t/runtimeerror-trying-to-backward-through-the-graph-a-second-time-but-the-buffers-have-already-been-freed-specify-retain-graph-true-when-calling-backward-the-first-time/6795)和报错提示,意思就是执行backward的时候,中间结果已经被释放了.一开始比较纳闷在于,我仅仅增加了一些卷积层和操作在train方法里面,怎么突然就会进行该报错呢,并且中间结果都是在train方法中,不会出现backward的时候已经被释放.
 
 经过仔细审查,有个地方存在比较大的问题, 在我的代码出有这样一个逻辑

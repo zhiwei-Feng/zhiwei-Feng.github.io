@@ -7,7 +7,6 @@ tags:
 - pytorch
 - gpu
 - oom
-cover: https://s2.loli.net/2022/04/21/yreukaM2XIs8A4f.png
 ---
 
 记录一次模型推理过程中显存不断增加直至Out-of-Memory的解决过程.

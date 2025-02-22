@@ -7,7 +7,6 @@ tags:
 - leetcode
 - algorithm
 - backtrace
-cover: https://s2.loli.net/2022/04/19/CgdTPa8ncFltV53.png
 ---
 
 组合总和系列题总结.

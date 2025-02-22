@@ -10,9 +10,11 @@ tags:
 ---
 
 ## 概述
-该节设计的Leetcode题目为:
+该节涉及的Leetcode题目为:
 1. [84. 柱状图中最大的矩形](https://leetcode.cn/problems/largest-rectangle-in-histogram/)
 2. [85. 最大矩形](https://leetcode.cn/problems/maximal-rectangle/)
+
+<!-- more -->
 
 实际上, 85题可以看作是基于84题来拓展了一维的问题.首先来看84题,如下图,可以看到题目的意思就是给定一组宽度为1的矩形块,求出其中可以构成的最大矩形的面积.
 ![example](https://assets.leetcode.com/uploads/2021/01/04/histogram.jpg)

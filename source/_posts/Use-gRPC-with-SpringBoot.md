@@ -10,6 +10,8 @@ tags:
 
 gRPC相比于REST HTTP请求在接口规范、传输性能和流式通信方面更好,因此广泛应用分布式系统和微服务的通信过程中. 本文主要是针对目前gRPC-Java和SpringBoot的入门级教程不够统一而写,也是使用过程的记录.感谢[grpc-spring-boot-starter](https://github.com/yidongnan/grpc-spring-boot-starter)提供了开箱即用的gRPC服务端和客户端的接口实现,因此我们可以专注业务实现.
 
+<!-- more -->
+
 ## 项目简述
 该Demo主要实现一个gRPC服务端和一个gRPC客户端,服务端提供一个api接收请求参数name,返回消息`Hello ==> <name>`. 本项目基于maven构建的多module工程实现.
 
