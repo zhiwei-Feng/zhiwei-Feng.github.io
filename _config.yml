@@ -9,7 +9,7 @@ description: Welcome! I'm a **_Gopher_**.
   I am learning about microservices/distributed systems/Rust and other related knowledge. 
   This site is powered by [Cactus](https://github.com/probberechts/hexo-theme-cactus).
 keywords: Go,Rust,分布式,微服务,云原生,中间件
-author: 𝖋𝖊𝖓𝖌𝖟𝖜
+author: Adrian Feng
 language: en
 timezone: 'Asia/Shanghai'
 email: zhiwei.feng1995@gmail.com
@@ -100,9 +100,9 @@ ignore:
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-# theme: icarus
+theme: icarus
 # theme: cactus
-theme: redefine
+# theme: redefine
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment

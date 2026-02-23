@@ -104,7 +104,6 @@ navbar:
         Archives: /archives
         Categories: /categories
         Tags: /tags
-        About: /about
     # Links to be shown on the right of the navigation bar
     links:
         Download on GitHub:
@@ -225,11 +224,11 @@ widgets:
         position: left
         type: profile
         # Author name
-        author: fengzw
+        author: Adrian Feng
         # Author title
-        author_title: Gopher/Newbie Rustacean
+        author_title: 
         # Author's current location
-        location: Shanghai
+        location: 
         # URL or path to the avatar image
         avatar: 'https://i.loli.net/2021/06/13/rvql29wD8s7aVuY.jpg'
         # Whether show the rounded avatar image
