@@ -3,11 +3,9 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Finite the span of life, infinite the pursuit of wisdom.
-# subtitle: Protect Your Dreams
-description: Welcome! I'm a **_Gopher_**. 
-  I am learning about microservices/distributed systems/Rust and other related knowledge. 
-  This site is powered by [Cactus](https://github.com/probberechts/hexo-theme-cactus).
+title: Finite life, infinite pursuits
+subtitle: 技术、学习、随笔
+description: Welcome! I'm a **_Backend Engineer_**. I am interested about microservices/distributed systems and other related knowledge. 
 keywords: Go,Rust,分布式,微服务,云原生,中间件
 author: Adrian Feng
 language: en
@@ -32,6 +30,7 @@ category_dir: categories
 code_dir: downloads/code
 i18n_dir: :lang
 skip_render:
+  - nav_probe.html
 
 # Writing
 new_post_name: :title.md # File name of new posts
@@ -100,15 +99,25 @@ ignore:
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: icarus
+theme: hermes-agent
+# theme: icarus
 # theme: cactus
 # theme: redefine
+
+# Per-theme overrides for hermes-agent. Site-level block beats themes/hermes-agent/_config.yml.
+theme_config:
+  site_title: "ADRIAN FENG"
+  nav:
+    - { name: ARCHIVE, path: /archives/ }
+    - { name: CATEGORIES, path: /categories/ }
+    - { name: TAGS, path: /tags/ }
+    - { name: ABOUT, path: /about/ }
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: git
-  repo: https://github.com/zhiwei-Feng/zhiwei-Feng.github.io.git
+  repo: git@github.com:zhiwei-Feng/zhiwei-Feng.github.io.git
   branch: gh-pages-v2
   name: zhiwei-feng
   mail: zhiwei.feng1995@gmail.com
