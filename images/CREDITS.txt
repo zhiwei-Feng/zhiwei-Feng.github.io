@@ -1,0 +1,16 @@
+portrait-bg.webp
+
+Derived from "The Tower of Babel" by Gustave Doré (1832–1883), a wood
+engraving from "La Sainte Bible" (1866). Depicts the unfinished tower
+rising into clouds with diminutive figures and architecture at its base —
+the dwarfed-figure / monumental-ruin composition characteristic of
+Romantic biblical illustration.
+
+Source: https://commons.wikimedia.org/wiki/File:Gustave_Dore_Bible_The_Tower_of_Babel.jpg
+Public domain (artist died 1883; copyright expired worldwide).
+
+Modifications: center-cropped to square from the original vertical plate,
+auto-contrast normalized, inverted (dark ground / light line), thresholded
+to keep only the darkest original strokes as bright silhouette over a
+near-black field, downscaled to 1000x1000, encoded as lossy WebP. No
+restriction on further use.
